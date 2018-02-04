@@ -586,7 +586,7 @@ func TestMatch_Inter(t *testing.T) {
 	}
 }
 
-func TestMatch_All(t *testing.T) {
+func TestMatch(t *testing.T) {
 	var testData = []struct {
 		rawYql string
 		data   map[string]interface{}
@@ -649,6 +649,6 @@ func TestMatch_All(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ass.Equal(tc.out, Match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }

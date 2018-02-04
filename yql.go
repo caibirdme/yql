@@ -4,8 +4,8 @@ import (
 	"strconv"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/caibirdme/yql/grammar"
-	"github.com/caibirdme/yql/stack"
+	"github.com/caibirdme/yql/internal/grammar"
+	"github.com/caibirdme/yql/internal/stack"
 )
 
 type yqlListener struct {
@@ -71,6 +71,11 @@ func match(rawYQL string, data map[string]interface{}) bool {
 		return false
 	}
 	return l.stack.Pop()
+}
+
+// Match interprete the rawYQL and execute it with the provided data
+func Match(rawYQL string, data map[string]interface{}) bool {
+	return match(rawYQL, data)
 }
 
 func compare(actualValue interface{}, expectValue []string, op string) bool {
