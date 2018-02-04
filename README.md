@@ -1,4 +1,8 @@
 ### YQL(Yet another-Query-Language)
+[![Build Status](https://www.travis-ci.org/caibirdme/yql.svg?branch=master)](https://www.travis-ci.org/caibirdme/yql)
+[![GoDoc](https://godoc.org/github.com/caibirdme/yql?status.svg)](https://godoc.org/github.com/caibirdme/yql)
+
+
 YQL is very similar with the `where` part of sql. It is designed for rule engine in didi. You can regard it as a sql which also support comparison between two sets. YQL have little concepts and you can use it well short after reading the examples.
 
 ### Install
