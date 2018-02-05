@@ -80,6 +80,17 @@ func cmpStr(actual, expect string, op string) bool {
 	}
 }
 
+func cmpBool(actual, expect bool, op string) bool {
+	switch op {
+	case opEqual:
+		return actual == expect
+	case opNotEqual:
+		return actual != expect
+	default:
+		return false
+	}
+}
+
 func compareSet(actual interface{}, expect []string, op string) bool {
 	switch op {
 	case opEqual, opNotEqual, opInter, opNotInter, opIn, opNotIn:

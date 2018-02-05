@@ -131,6 +131,12 @@ func compare(actualValue interface{}, expectValue []string, op string) bool {
 		return cmpFloat(actual, expect, op)
 	case string:
 		return cmpStr(actual, e, op)
+	case bool:
+		expect, err := strconv.ParseBool(e)
+		if nil != err {
+			return false
+		}
+		return cmpBool(actual, expect, op)
 	default:
 		return false
 	}
