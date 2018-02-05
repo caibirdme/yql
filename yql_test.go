@@ -6,7 +6,90 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMatch_Simple(t *testing.T) {
+func TestMatch_Simple_Int(t *testing.T) {
+	var testData = []struct {
+		rawYql string
+		data   map[string]interface{}
+		out    bool
+	}{
+		{
+			rawYql: `a=10`,
+			data: map[string]interface{}{
+				"a": 9,
+			},
+			out: false,
+		},
+		{
+			rawYql: `a=10`,
+			data: map[string]interface{}{
+				"a": 10,
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>10`,
+			data: map[string]interface{}{
+				"a": 10,
+			},
+			out: false,
+		},
+		{
+			rawYql: `a>10`,
+			data: map[string]interface{}{
+				"a": 11,
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>=10`,
+			data: map[string]interface{}{
+				"a": 10,
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>=10`,
+			data: map[string]interface{}{
+				"a": 11,
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>=10`,
+			data: map[string]interface{}{
+				"a": 1,
+			},
+			out: false,
+		},
+		{
+			rawYql: `a<10`,
+			data: map[string]interface{}{
+				"a": 1,
+			},
+			out: true,
+		},
+		{
+			rawYql: `a<10`,
+			data: map[string]interface{}{
+				"a": 10,
+			},
+			out: false,
+		},
+		{
+			rawYql: `a<10`,
+			data: map[string]interface{}{
+				"a": 11,
+			},
+			out: false,
+		},
+	}
+	ass := assert.New(t)
+	for _, tc := range testData {
+		ass.Equal(tc.out, Match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+	}
+}
+
+func TestMatch_Simple_Int64(t *testing.T) {
 	var testData = []struct {
 		rawYql string
 		data   map[string]interface{}
@@ -22,7 +105,194 @@ func TestMatch_Simple(t *testing.T) {
 		{
 			rawYql: `a=10`,
 			data: map[string]interface{}{
+				"a": int64(10),
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>10`,
+			data: map[string]interface{}{
+				"a": int64(10),
+			},
+			out: false,
+		},
+		{
+			rawYql: `a>10`,
+			data: map[string]interface{}{
+				"a": int64(11),
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>=10`,
+			data: map[string]interface{}{
+				"a": int64(10),
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>=10`,
+			data: map[string]interface{}{
+				"a": int64(11),
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>=10`,
+			data: map[string]interface{}{
+				"a": int64(1),
+			},
+			out: false,
+		},
+		{
+			rawYql: `a<10`,
+			data: map[string]interface{}{
+				"a": int64(1),
+			},
+			out: true,
+		},
+		{
+			rawYql: `a<10`,
+			data: map[string]interface{}{
+				"a": int64(10),
+			},
+			out: false,
+		},
+		{
+			rawYql: `a<10`,
+			data: map[string]interface{}{
+				"a": int64(11),
+			},
+			out: false,
+		},
+	}
+	ass := assert.New(t)
+	for _, tc := range testData {
+		ass.Equal(tc.out, Match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+	}
+}
+
+func TestMatch_Simple_String(t *testing.T) {
+	var testData = []struct {
+		rawYql string
+		data   map[string]interface{}
+		out    bool
+	}{
+		{
+			rawYql: `a=10`,
+			data: map[string]interface{}{
+				"a": "10",
+			},
+			out: true,
+		},
+		{
+			rawYql: `a=10`,
+			data: map[string]interface{}{
+				"a": "010",
+			},
+			out: false,
+		},
+		{
+			rawYql: `a=10`,
+			data: map[string]interface{}{
+				"a": "",
+			},
+			out: false,
+		},
+		{
+			rawYql: `a>1`,
+			data: map[string]interface{}{
+				"a": "1",
+			},
+			out: false,
+		},
+		{
+			rawYql: `a>1`,
+			data: map[string]interface{}{
+				"a": "2",
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>=1`,
+			data: map[string]interface{}{
+				"a": "1",
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>=1`,
+			data: map[string]interface{}{
+				"a": "2",
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>=1`,
+			data: map[string]interface{}{
+				"a": "",
+			},
+			out: false,
+		},
+		{
+			rawYql: `a>20`,
+			data: map[string]interface{}{
+				"a": "21",
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>20`,
+			data: map[string]interface{}{
+				"a": "3",
+			},
+			out: true,
+		},
+		{
+			rawYql: `a>20`,
+			data: map[string]interface{}{
+				"a": "1",
+			},
+			out: false,
+		},
+		{
+			rawYql: `a!=20`,
+			data: map[string]interface{}{
+				"a": "3",
+			},
+			out: true,
+		},
+		{
+			rawYql: `a!=20`,
+			data: map[string]interface{}{
+				"a": "20",
+			},
+			out: false,
+		},
+	}
+	ass := assert.New(t)
+	for _, tc := range testData {
+		ass.Equal(tc.out, Match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+	}
+}
+
+func TestMatch_Simple_Float(t *testing.T) {
+	var testData = []struct {
+		rawYql string
+		data   map[string]interface{}
+		out    bool
+	}{
+		{
+			rawYql: `a=10`,
+			data: map[string]interface{}{
 				"a": float64(10),
+			},
+			out: true,
+		},
+		{
+			rawYql: `a=10`,
+			data: map[string]interface{}{
+				"a": float64(10 - epsilon*0.1),
 			},
 			out: true,
 		},
@@ -41,72 +311,18 @@ func TestMatch_Simple(t *testing.T) {
 			out: false,
 		},
 		{
+			rawYql: `a>10`,
+			data: map[string]interface{}{
+				"a": float64(10.000000001),
+			},
+			out: true,
+		},
+		{
 			rawYql: `a<10`,
 			data: map[string]interface{}{
-				"a": float64(10),
-			},
-			out: false,
-		},
-		{
-			rawYql: `a=10`,
-			data: map[string]interface{}{
-				"a": "10",
+				"a": float64(10 - epsilon*0.1),
 			},
 			out: true,
-		},
-		{
-			rawYql: `a=10`,
-			data: map[string]interface{}{
-				"a": int64(10),
-			},
-			out: true,
-		},
-		{
-			rawYql: `a='10'`,
-			data: map[string]interface{}{
-				"a": int64(10),
-			},
-			out: true,
-		},
-		{
-			rawYql: `a=10`,
-			data: map[string]interface{}{
-				"c": int64(10),
-			},
-			out: false,
-		},
-		{
-			rawYql: `a=10`,
-			data:   nil,
-			out:    false,
-		},
-		{
-			rawYql: `a!=10`,
-			data: map[string]interface{}{
-				"a": int64(10),
-			},
-			out: false,
-		},
-		{
-			rawYql: `a!=10`,
-			data: map[string]interface{}{
-				"a": int64(0),
-			},
-			out: true,
-		},
-		{
-			rawYql: `a<=10`,
-			data: map[string]interface{}{
-				"a": int64(10),
-			},
-			out: true,
-		},
-		{
-			rawYql: `a<=10`,
-			data: map[string]interface{}{
-				"a": int64(100),
-			},
-			out: false,
 		},
 		{
 			rawYql: `a>=10`,
@@ -133,13 +349,6 @@ func TestMatch_Simple(t *testing.T) {
 			rawYql: `a<=10`,
 			data: map[string]interface{}{
 				"a": float64(9.0),
-			},
-			out: true,
-		},
-		{
-			rawYql: `a>=10`,
-			data: map[string]interface{}{
-				"a": float64(10.0),
 			},
 			out: true,
 		},
@@ -149,34 +358,6 @@ func TestMatch_Simple(t *testing.T) {
 				"a": float64(11.0),
 			},
 			out: false,
-		},
-		{
-			rawYql: `a<=10`,
-			data: map[string]interface{}{
-				"a": "0",
-			},
-			out: true,
-		},
-		{
-			rawYql: `a<=10`,
-			data: map[string]interface{}{
-				"a": "00",
-			},
-			out: true,
-		},
-		{
-			rawYql: `a=10`,
-			data: map[string]interface{}{
-				"a": "10",
-			},
-			out: true,
-		},
-		{
-			rawYql: `a!=10`,
-			data: map[string]interface{}{
-				"a": "0",
-			},
-			out: true,
 		},
 	}
 	ass := assert.New(t)
@@ -195,6 +376,27 @@ func TestMatch_In(t *testing.T) {
 			rawYql: `a !in (1,2, 10,   5)`,
 			data: map[string]interface{}{
 				"a": int64(9),
+			},
+			out: true,
+		},
+		{
+			rawYql: `a !in (1,2, 10,   5)`,
+			data: map[string]interface{}{
+				"a": 9,
+			},
+			out: true,
+		},
+		{
+			rawYql: `a in (1,2, 10,   5)`,
+			data: map[string]interface{}{
+				"a": 10,
+			},
+			out: true,
+		},
+		{
+			rawYql: `a in (1,2, 10,   5)`,
+			data: map[string]interface{}{
+				"a": []int{10, 2},
 			},
 			out: true,
 		},

@@ -1,42 +1,37 @@
 package stack
 
-type Stack interface {
-	Push(bool)
-	Pop() bool
-	Init()
-}
-
-type baseStack struct {
+// BoolStack implement a basic stack
+type BoolStack struct {
 	data []bool
 	sp   int
 }
 
-func (s *baseStack) Pop() bool {
+// Pop pops the element atop of the stack
+func (s *BoolStack) Pop() bool {
 	if s.sp < 0 {
 		return false
 	}
 	r := s.data[s.sp]
+	s.data = s.data[:s.sp]
 	s.sp--
 	return r
 }
 
-func (s *baseStack) Push(b bool) {
+// Push pushes an element into the top of the stack
+func (s *BoolStack) Push(b bool) {
 	s.sp++
-	length := len(s.data)
-	if length-1 >= s.sp {
-		s.data[s.sp] = b
-	} else {
-		s.data = append(s.data, b)
-	}
+	s.data = append(s.data, b)
 }
 
-func (s *baseStack) Init() {
+// Init initializes the stack
+func (s *BoolStack) Init() {
 	if s.sp > -1 {
 		s.data = s.data[:0]
 	}
 	s.sp = -1
 }
 
-func NewStack() Stack {
-	return &baseStack{sp: -1}
+// NewStack create a new stack object
+func NewStack() *BoolStack {
+	return &BoolStack{sp: -1}
 }

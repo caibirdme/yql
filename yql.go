@@ -10,9 +10,17 @@ import (
 
 type yqlListener struct {
 	*grammar.BaseYqlListener
-	stack stack.Stack
+	stack Stack
 	data  map[string]interface{}
 	halt  bool
+}
+
+// Stack acquire the most basic API for a stack
+type Stack interface {
+	Push(bool)
+	Pop() bool
+	// Init initialize the stack, considering the stack will be reused
+	Init()
 }
 
 func (l *yqlListener) ExitBooleanExpr(ctx *grammar.BooleanExprContext) {
@@ -84,6 +92,12 @@ func compare(actualValue interface{}, expectValue []string, op string) bool {
 	}
 	e := removeQuote(expectValue[0])
 	switch actual := actualValue.(type) {
+	case int:
+		expect, err := strconv.ParseInt(e, 10, 64)
+		if nil != err {
+			return false
+		}
+		return cmpInt(int64(actual), expect, op)
 	case int64:
 		expect, err := strconv.ParseInt(e, 10, 64)
 		if nil != err {

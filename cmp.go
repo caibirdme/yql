@@ -87,12 +87,16 @@ func compareSet(actual interface{}, expect []string, op string) bool {
 		return false
 	}
 	switch actualArr := actual.(type) {
+	case int:
+		return cmpIntSet([]int64{int64(actualArr)}, expect, op)
 	case int64:
 		return cmpIntSet([]int64{actualArr}, expect, op)
 	case float64:
 		return cmpFloatSet([]float64{actualArr}, expect, op)
 	case string:
 		return cmpStringSet([]string{actualArr}, expect, op)
+	case []int:
+		return cmpIntSet(intArr2i64Arr(actualArr), expect, op)
 	case []int64:
 		return cmpIntSet(actualArr, expect, op)
 	case []float64:
@@ -102,6 +106,18 @@ func compareSet(actual interface{}, expect []string, op string) bool {
 	default:
 		return false
 	}
+}
+
+func intArr2i64Arr(arr []int) []int64 {
+	length := len(arr)
+	if length == 0 {
+		return nil
+	}
+	res := make([]int64, 0, length)
+	for _, v := range arr {
+		res = append(res, int64(v))
+	}
+	return res
 }
 
 var intSetCmpFunc = map[string]func([]int64, []int64) bool{
