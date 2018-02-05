@@ -27,6 +27,6 @@ FALSE: 'false';
 FIELDNAME: [a-zA-Z]+;
 STRING: '\'' .*? '\'';
 fragment DIGIT: [0-9];
-INT: DIGIT+;
-FLOAT: DIGIT+ '.' DIGIT*;
+INT: ('+'|'-')? DIGIT+;
+FLOAT: ('+'|'-')? DIGIT+ '.' DIGIT*;
 WS: [ \t\r\n]+ -> skip;

@@ -1,6 +1,7 @@
 package yql
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -8,30 +9,29 @@ import (
 	"github.com/caibirdme/yql/internal/stack"
 )
 
-type yqlListener struct {
-	*grammar.BaseYqlListener
-	stack Stack
-	data  map[string]interface{}
-	halt  bool
-}
-
-// Stack acquire the most basic API for a stack
-type Stack interface {
+type boolStack interface {
 	Push(bool)
 	Pop() bool
 	// Init initialize the stack, considering the stack will be reused
 	Init()
 }
 
+type yqlListener struct {
+	*grammar.BaseYqlListener
+	stack       boolStack
+	data        map[string]interface{}
+	notFoundErr error
+}
+
 func (l *yqlListener) ExitBooleanExpr(ctx *grammar.BooleanExprContext) {
-	if l.halt {
+	if l.notFoundErr != nil {
 		return
 	}
 	operator := ctx.GetOp().GetText()
 	fieldName := ctx.FIELDNAME().GetText()
 	actualValue, ok := l.data[fieldName]
 	if !ok {
-		l.halt = true
+		l.notFoundErr = fmt.Errorf("%s not provided", fieldName)
 		return
 	}
 	allValue := ctx.AllValue()
@@ -44,7 +44,7 @@ func (l *yqlListener) ExitBooleanExpr(ctx *grammar.BooleanExprContext) {
 }
 
 func (l *yqlListener) ExitOrExpr(ctx *grammar.OrExprContext) {
-	if l.halt {
+	if l.notFoundErr != nil {
 		return
 	}
 	q1 := l.stack.Pop()
@@ -53,7 +53,7 @@ func (l *yqlListener) ExitOrExpr(ctx *grammar.OrExprContext) {
 }
 
 func (l *yqlListener) ExitAndExpr(ctx *grammar.AndExprContext) {
-	if l.halt {
+	if l.notFoundErr != nil {
 		return
 	}
 	q1 := l.stack.Pop()
@@ -61,28 +61,47 @@ func (l *yqlListener) ExitAndExpr(ctx *grammar.AndExprContext) {
 	l.stack.Push(q1 && q2)
 }
 
-func match(rawYQL string, data map[string]interface{}) bool {
+type lexerErrHandler struct {
+	*antlr.DefaultErrorListener
+}
+
+func (d *lexerErrHandler) SyntaxError(recognizer antlr.Recognizer, offendingSymbol interface{}, line, column int, msg string, e antlr.RecognitionException) {
+	panic(e)
+}
+
+func match(rawYQL string, data map[string]interface{}) (ok bool, err error) {
 	if 0 == len(data) {
-		return false
+		return false, nil
 	}
+	defer func() {
+		if r := recover(); nil != r {
+			ok = false
+			err = fmt.Errorf("%v", r)
+		}
+	}()
 	inputStream := antlr.NewInputStream(rawYQL)
 	lexer := grammar.NewYqlLexer(inputStream)
+	lexer.AddErrorListener(&lexerErrHandler{
+		DefaultErrorListener: antlr.NewDefaultErrorListener(),
+	})
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	parser := grammar.NewYqlParser(stream)
 	parser.BuildParseTrees = true
+	parser.SetErrorHandler(antlr.NewBailErrorStrategy())
 	tree := parser.Query()
 	l := &yqlListener{stack: stack.NewStack()}
 	l.stack.Init()
 	l.data = data
 	antlr.ParseTreeWalkerDefault.Walk(l, tree)
-	if l.halt {
-		return false
+	if l.notFoundErr != nil {
+		return false, l.notFoundErr
 	}
-	return l.stack.Pop()
+	return l.stack.Pop(), nil
 }
 
 // Match interprete the rawYQL and execute it with the provided data
-func Match(rawYQL string, data map[string]interface{}) bool {
+// error will be returned if rawYQL contains illegal syntax
+func Match(rawYQL string, data map[string]interface{}) (bool, error) {
 	return match(rawYQL, data)
 }
 

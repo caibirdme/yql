@@ -6,7 +6,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMatch_Simple_Int(t *testing.T) {
+func TestHandleSyntaxErr(t *testing.T) {
+	var testData = []string{
+		"a=foo",
+		"a in (foo,bar)",
+		"a in (foo)",
+		"a ∩ (foo)",
+		"a !=   foo",
+		"a = --5",
+	}
+	data := map[string]interface{}{
+		"a": "foo",
+	}
+	ass := assert.New(t)
+	for _, tc := range testData {
+		ok, err := Match(tc, data)
+		ass.False(ok)
+		ass.Error(err)
+	}
+}
+
+func TestMatch_Int(t *testing.T) {
 	var testData = []struct {
 		rawYql string
 		data   map[string]interface{}
@@ -85,11 +105,13 @@ func TestMatch_Simple_Int(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, Match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, err := Match(tc.rawYql, tc.data)
+		ass.NoError(err)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
 
-func TestMatch_Simple_Int64(t *testing.T) {
+func TestMatch_Int64(t *testing.T) {
 	var testData = []struct {
 		rawYql string
 		data   map[string]interface{}
@@ -168,11 +190,13 @@ func TestMatch_Simple_Int64(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, Match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, err := Match(tc.rawYql, tc.data)
+		ass.NoError(err)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
 
-func TestMatch_Simple_String(t *testing.T) {
+func TestMatch_String(t *testing.T) {
 	var testData = []struct {
 		rawYql string
 		data   map[string]interface{}
@@ -272,7 +296,9 @@ func TestMatch_Simple_String(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, Match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, err := Match(tc.rawYql, tc.data)
+		ass.NoError(err)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
 
@@ -362,7 +388,8 @@ func TestMatch_Simple_Float(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, _ := Match(tc.rawYql, tc.data)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
 
@@ -515,7 +542,8 @@ func TestMatch_In(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, _ := Match(tc.rawYql, tc.data)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
 
@@ -590,7 +618,8 @@ func TestMatch_And(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, _ := Match(tc.rawYql, tc.data)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
 
@@ -656,7 +685,9 @@ func TestMatch_Or(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, err := Match(tc.rawYql, tc.data)
+		ass.NoError(err)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
 
@@ -715,7 +746,9 @@ func TestMatch_Or_And(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, err := Match(tc.rawYql, tc.data)
+		ass.NoError(err)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
 
@@ -726,6 +759,13 @@ func TestMatch_Inter(t *testing.T) {
 		out    bool
 	}{
 		{
+			rawYql: `letter ∩ ('a','b','c','d','e')`,
+			data: map[string]interface{}{
+				"letter": []string{"a", "e"},
+			},
+			out: true,
+		},
+		{
 			rawYql: `letter !∩ (1,2,3)`,
 			data: map[string]interface{}{
 				"letter": []float64{0.5, 3.01},
@@ -733,28 +773,21 @@ func TestMatch_Inter(t *testing.T) {
 			out: true,
 		},
 		{
-			rawYql: `letter ∩ (a,b,c,d,e)`,
-			data: map[string]interface{}{
-				"letter": []string{"a", "e"},
-			},
-			out: true,
-		},
-		{
-			rawYql: `letter ∩ (a,b,c,d,e)`,
+			rawYql: `letter ∩ ('a', 'b','c','d',  'e')`,
 			data: map[string]interface{}{
 				"letter": []string{"a", "e", "f"},
 			},
 			out: true,
 		},
 		{
-			rawYql: `letter ∩ (a,b,c,d, e)`,
+			rawYql: `letter ∩ ('a','b','c', 'd',  'e')`,
 			data: map[string]interface{}{
 				"letter": []string{"f"},
 			},
 			out: false,
 		},
 		{
-			rawYql: `letter ∩ (a,b,c,d, e)`,
+			rawYql: `letter ∩ ('a','b','c','d')`,
 			data: map[string]interface{}{
 				"letter": "c",
 			},
@@ -784,7 +817,9 @@ func TestMatch_Inter(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, err := Match(tc.rawYql, tc.data)
+		ass.NoError(err)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
 
@@ -795,7 +830,7 @@ func TestMatch(t *testing.T) {
 		out    bool
 	}{
 		{
-			rawYql: `age>23 and (sex in (boy,girl) or sex='other') and score>=95 and rank !in (b,c,d)`,
+			rawYql: `age>23 and (sex in ('boy','girl') or sex='other') and score>=95 and rank !in ('b','c','d')`,
 			data: map[string]interface{}{
 				"age":   int64(24),
 				"sex":   "boy",
@@ -805,7 +840,7 @@ func TestMatch(t *testing.T) {
 			out: true,
 		},
 		{
-			rawYql: `age>23 and (sex in (boy,girl) or sex='other')`,
+			rawYql: `age>23 and (sex in ('boy','girl') or sex='other')`,
 			data: map[string]interface{}{
 				"age": int64(24),
 				"sex": "other",
@@ -813,7 +848,7 @@ func TestMatch(t *testing.T) {
 			out: true,
 		},
 		{
-			rawYql: `age>23 and (sex in (boy,girl) or sex='other')`,
+			rawYql: `age>23 and (sex in ('boy','girl') or sex='other')`,
 			data: map[string]interface{}{
 				"age": int64(24),
 				"sex": "boy",
@@ -821,7 +856,7 @@ func TestMatch(t *testing.T) {
 			out: true,
 		},
 		{
-			rawYql: `age>23 and (sex in (boy,girl) or some!=5) and words='hello world'`,
+			rawYql: `age>23 and (sex in ('boy','girl') or some!=5) and words='hello world'`,
 			data: map[string]interface{}{
 				"age":   int64(211),
 				"sex":   "boy",
@@ -831,7 +866,7 @@ func TestMatch(t *testing.T) {
 			out: true,
 		},
 		{
-			rawYql: `age>23 and (sex in (boy,girl) or some!=5) and words='hello world'`,
+			rawYql: `age>23 and (sex in ('boy','girl') or some!=5) and words='hello world'`,
 			data: map[string]interface{}{
 				"age":   int64(21),
 				"sex":   "boy",
@@ -851,6 +886,8 @@ func TestMatch(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ass.Equal(tc.out, Match(tc.rawYql, tc.data), "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+		ok, err := Match(tc.rawYql, tc.data)
+		ass.NoError(err)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
 	}
 }
