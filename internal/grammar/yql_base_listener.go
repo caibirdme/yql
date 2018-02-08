@@ -56,6 +56,12 @@ func (s *BaseYqlListener) EnterBooleanExpr(ctx *BooleanExprContext) {}
 // ExitBooleanExpr is called when production booleanExpr is exited.
 func (s *BaseYqlListener) ExitBooleanExpr(ctx *BooleanExprContext) {}
 
+// EnterLeftexpr is called when production leftexpr is entered.
+func (s *BaseYqlListener) EnterLeftexpr(ctx *LeftexprContext) {}
+
+// ExitLeftexpr is called when production leftexpr is exited.
+func (s *BaseYqlListener) ExitLeftexpr(ctx *LeftexprContext) {}
+
 // EnterValue is called when production value is entered.
 func (s *BaseYqlListener) EnterValue(ctx *ValueContext) {}
 

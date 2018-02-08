@@ -25,6 +25,9 @@ type YqlListener interface {
 	// EnterBooleanExpr is called when entering the booleanExpr production.
 	EnterBooleanExpr(c *BooleanExprContext)
 
+	// EnterLeftexpr is called when entering the leftexpr production.
+	EnterLeftexpr(c *LeftexprContext)
+
 	// EnterValue is called when entering the value production.
 	EnterValue(c *ValueContext)
 
@@ -45,6 +48,9 @@ type YqlListener interface {
 
 	// ExitBooleanExpr is called when exiting the booleanExpr production.
 	ExitBooleanExpr(c *BooleanExprContext)
+
+	// ExitLeftexpr is called when exiting the leftexpr production.
+	ExitLeftexpr(c *LeftexprContext)
 
 	// ExitValue is called when exiting the value production.
 	ExitValue(c *ValueContext)

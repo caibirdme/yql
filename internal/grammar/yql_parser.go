@@ -15,66 +15,75 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 24, 106,
-	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 3, 2, 3, 2, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 5, 3, 19, 10, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 7, 3, 27, 10, 3, 12, 3, 14, 3, 30, 11, 3, 3, 4, 3, 4, 3, 4, 3, 4,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 27, 124,
+	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 3, 2, 3, 2,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 3, 21, 10, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 7, 3, 29, 10, 3, 12, 3, 14, 3, 32, 11, 3, 3, 4, 3, 4,
 	3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4,
-	3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 7, 4, 56, 10, 4, 12, 4,
-	14, 4, 59, 11, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 7, 4,
-	69, 10, 4, 12, 4, 14, 4, 72, 11, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4,
-	3, 4, 3, 4, 7, 4, 82, 10, 4, 12, 4, 14, 4, 85, 11, 4, 3, 4, 3, 4, 3, 4,
-	3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 7, 4, 95, 10, 4, 12, 4, 14, 4, 98, 11, 4,
-	3, 4, 3, 4, 5, 4, 102, 10, 4, 3, 5, 3, 5, 3, 5, 2, 3, 4, 6, 2, 4, 6, 8,
-	2, 3, 4, 2, 18, 19, 21, 23, 2, 117, 2, 10, 3, 2, 2, 2, 4, 18, 3, 2, 2,
-	2, 6, 101, 3, 2, 2, 2, 8, 103, 3, 2, 2, 2, 10, 11, 5, 4, 3, 2, 11, 3, 3,
-	2, 2, 2, 12, 13, 8, 3, 1, 2, 13, 19, 5, 6, 4, 2, 14, 15, 7, 5, 2, 2, 15,
-	16, 5, 4, 3, 2, 16, 17, 7, 6, 2, 2, 17, 19, 3, 2, 2, 2, 18, 12, 3, 2, 2,
-	2, 18, 14, 3, 2, 2, 2, 19, 28, 3, 2, 2, 2, 20, 21, 12, 5, 2, 2, 21, 22,
-	7, 3, 2, 2, 22, 27, 5, 4, 3, 6, 23, 24, 12, 4, 2, 2, 24, 25, 7, 4, 2, 2,
-	25, 27, 5, 4, 3, 5, 26, 20, 3, 2, 2, 2, 26, 23, 3, 2, 2, 2, 27, 30, 3,
-	2, 2, 2, 28, 26, 3, 2, 2, 2, 28, 29, 3, 2, 2, 2, 29, 5, 3, 2, 2, 2, 30,
-	28, 3, 2, 2, 2, 31, 32, 7, 20, 2, 2, 32, 33, 7, 7, 2, 2, 33, 102, 5, 8,
-	5, 2, 34, 35, 7, 20, 2, 2, 35, 36, 7, 8, 2, 2, 36, 102, 5, 8, 5, 2, 37,
-	38, 7, 20, 2, 2, 38, 39, 7, 9, 2, 2, 39, 102, 5, 8, 5, 2, 40, 41, 7, 20,
-	2, 2, 41, 42, 7, 10, 2, 2, 42, 102, 5, 8, 5, 2, 43, 44, 7, 20, 2, 2, 44,
-	45, 7, 11, 2, 2, 45, 102, 5, 8, 5, 2, 46, 47, 7, 20, 2, 2, 47, 48, 7, 12,
-	2, 2, 48, 102, 5, 8, 5, 2, 49, 50, 7, 20, 2, 2, 50, 51, 7, 13, 2, 2, 51,
-	52, 7, 5, 2, 2, 52, 57, 5, 8, 5, 2, 53, 54, 7, 14, 2, 2, 54, 56, 5, 8,
-	5, 2, 55, 53, 3, 2, 2, 2, 56, 59, 3, 2, 2, 2, 57, 55, 3, 2, 2, 2, 57, 58,
-	3, 2, 2, 2, 58, 60, 3, 2, 2, 2, 59, 57, 3, 2, 2, 2, 60, 61, 7, 6, 2, 2,
-	61, 102, 3, 2, 2, 2, 62, 63, 7, 20, 2, 2, 63, 64, 7, 15, 2, 2, 64, 65,
-	7, 5, 2, 2, 65, 70, 5, 8, 5, 2, 66, 67, 7, 14, 2, 2, 67, 69, 5, 8, 5, 2,
-	68, 66, 3, 2, 2, 2, 69, 72, 3, 2, 2, 2, 70, 68, 3, 2, 2, 2, 70, 71, 3,
-	2, 2, 2, 71, 73, 3, 2, 2, 2, 72, 70, 3, 2, 2, 2, 73, 74, 7, 6, 2, 2, 74,
-	102, 3, 2, 2, 2, 75, 76, 7, 20, 2, 2, 76, 77, 7, 16, 2, 2, 77, 78, 7, 5,
-	2, 2, 78, 83, 5, 8, 5, 2, 79, 80, 7, 14, 2, 2, 80, 82, 5, 8, 5, 2, 81,
-	79, 3, 2, 2, 2, 82, 85, 3, 2, 2, 2, 83, 81, 3, 2, 2, 2, 83, 84, 3, 2, 2,
-	2, 84, 86, 3, 2, 2, 2, 85, 83, 3, 2, 2, 2, 86, 87, 7, 6, 2, 2, 87, 102,
-	3, 2, 2, 2, 88, 89, 7, 20, 2, 2, 89, 90, 7, 17, 2, 2, 90, 91, 7, 5, 2,
-	2, 91, 96, 5, 8, 5, 2, 92, 93, 7, 14, 2, 2, 93, 95, 5, 8, 5, 2, 94, 92,
-	3, 2, 2, 2, 95, 98, 3, 2, 2, 2, 96, 94, 3, 2, 2, 2, 96, 97, 3, 2, 2, 2,
-	97, 99, 3, 2, 2, 2, 98, 96, 3, 2, 2, 2, 99, 100, 7, 6, 2, 2, 100, 102,
-	3, 2, 2, 2, 101, 31, 3, 2, 2, 2, 101, 34, 3, 2, 2, 2, 101, 37, 3, 2, 2,
-	2, 101, 40, 3, 2, 2, 2, 101, 43, 3, 2, 2, 2, 101, 46, 3, 2, 2, 2, 101,
-	49, 3, 2, 2, 2, 101, 62, 3, 2, 2, 2, 101, 75, 3, 2, 2, 2, 101, 88, 3, 2,
-	2, 2, 102, 7, 3, 2, 2, 2, 103, 104, 9, 2, 2, 2, 104, 9, 3, 2, 2, 2, 10,
-	18, 26, 28, 57, 70, 83, 96, 101,
+	3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4,
+	3, 4, 3, 4, 3, 4, 3, 4, 7, 4, 64, 10, 4, 12, 4, 14, 4, 67, 11, 4, 3, 4,
+	3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 7, 4, 77, 10, 4, 12, 4, 14, 4,
+	80, 11, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 7, 4, 90, 10,
+	4, 12, 4, 14, 4, 93, 11, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+	4, 7, 4, 103, 10, 4, 12, 4, 14, 4, 106, 11, 4, 3, 4, 3, 4, 5, 4, 110, 10,
+	4, 3, 5, 3, 5, 3, 5, 3, 5, 6, 5, 116, 10, 5, 13, 5, 14, 5, 117, 5, 5, 120,
+	10, 5, 3, 6, 3, 6, 3, 6, 2, 3, 4, 7, 2, 4, 6, 8, 10, 2, 3, 4, 2, 20, 21,
+	24, 26, 2, 136, 2, 12, 3, 2, 2, 2, 4, 20, 3, 2, 2, 2, 6, 109, 3, 2, 2,
+	2, 8, 111, 3, 2, 2, 2, 10, 121, 3, 2, 2, 2, 12, 13, 5, 4, 3, 2, 13, 3,
+	3, 2, 2, 2, 14, 15, 8, 3, 1, 2, 15, 21, 5, 6, 4, 2, 16, 17, 7, 5, 2, 2,
+	17, 18, 5, 4, 3, 2, 18, 19, 7, 6, 2, 2, 19, 21, 3, 2, 2, 2, 20, 14, 3,
+	2, 2, 2, 20, 16, 3, 2, 2, 2, 21, 30, 3, 2, 2, 2, 22, 23, 12, 5, 2, 2, 23,
+	24, 7, 3, 2, 2, 24, 29, 5, 4, 3, 6, 25, 26, 12, 4, 2, 2, 26, 27, 7, 4,
+	2, 2, 27, 29, 5, 4, 3, 5, 28, 22, 3, 2, 2, 2, 28, 25, 3, 2, 2, 2, 29, 32,
+	3, 2, 2, 2, 30, 28, 3, 2, 2, 2, 30, 31, 3, 2, 2, 2, 31, 5, 3, 2, 2, 2,
+	32, 30, 3, 2, 2, 2, 33, 34, 5, 8, 5, 2, 34, 35, 7, 7, 2, 2, 35, 36, 5,
+	10, 6, 2, 36, 110, 3, 2, 2, 2, 37, 38, 5, 8, 5, 2, 38, 39, 7, 8, 2, 2,
+	39, 40, 5, 10, 6, 2, 40, 110, 3, 2, 2, 2, 41, 42, 5, 8, 5, 2, 42, 43, 7,
+	9, 2, 2, 43, 44, 5, 10, 6, 2, 44, 110, 3, 2, 2, 2, 45, 46, 5, 8, 5, 2,
+	46, 47, 7, 10, 2, 2, 47, 48, 5, 10, 6, 2, 48, 110, 3, 2, 2, 2, 49, 50,
+	5, 8, 5, 2, 50, 51, 7, 11, 2, 2, 51, 52, 5, 10, 6, 2, 52, 110, 3, 2, 2,
+	2, 53, 54, 5, 8, 5, 2, 54, 55, 7, 12, 2, 2, 55, 56, 5, 10, 6, 2, 56, 110,
+	3, 2, 2, 2, 57, 58, 5, 8, 5, 2, 58, 59, 7, 13, 2, 2, 59, 60, 7, 5, 2, 2,
+	60, 65, 5, 10, 6, 2, 61, 62, 7, 14, 2, 2, 62, 64, 5, 10, 6, 2, 63, 61,
+	3, 2, 2, 2, 64, 67, 3, 2, 2, 2, 65, 63, 3, 2, 2, 2, 65, 66, 3, 2, 2, 2,
+	66, 68, 3, 2, 2, 2, 67, 65, 3, 2, 2, 2, 68, 69, 7, 6, 2, 2, 69, 110, 3,
+	2, 2, 2, 70, 71, 5, 8, 5, 2, 71, 72, 7, 15, 2, 2, 72, 73, 7, 5, 2, 2, 73,
+	78, 5, 10, 6, 2, 74, 75, 7, 14, 2, 2, 75, 77, 5, 10, 6, 2, 76, 74, 3, 2,
+	2, 2, 77, 80, 3, 2, 2, 2, 78, 76, 3, 2, 2, 2, 78, 79, 3, 2, 2, 2, 79, 81,
+	3, 2, 2, 2, 80, 78, 3, 2, 2, 2, 81, 82, 7, 6, 2, 2, 82, 110, 3, 2, 2, 2,
+	83, 84, 5, 8, 5, 2, 84, 85, 7, 16, 2, 2, 85, 86, 7, 5, 2, 2, 86, 91, 5,
+	10, 6, 2, 87, 88, 7, 14, 2, 2, 88, 90, 5, 10, 6, 2, 89, 87, 3, 2, 2, 2,
+	90, 93, 3, 2, 2, 2, 91, 89, 3, 2, 2, 2, 91, 92, 3, 2, 2, 2, 92, 94, 3,
+	2, 2, 2, 93, 91, 3, 2, 2, 2, 94, 95, 7, 6, 2, 2, 95, 110, 3, 2, 2, 2, 96,
+	97, 5, 8, 5, 2, 97, 98, 7, 17, 2, 2, 98, 99, 7, 5, 2, 2, 99, 104, 5, 10,
+	6, 2, 100, 101, 7, 14, 2, 2, 101, 103, 5, 10, 6, 2, 102, 100, 3, 2, 2,
+	2, 103, 106, 3, 2, 2, 2, 104, 102, 3, 2, 2, 2, 104, 105, 3, 2, 2, 2, 105,
+	107, 3, 2, 2, 2, 106, 104, 3, 2, 2, 2, 107, 108, 7, 6, 2, 2, 108, 110,
+	3, 2, 2, 2, 109, 33, 3, 2, 2, 2, 109, 37, 3, 2, 2, 2, 109, 41, 3, 2, 2,
+	2, 109, 45, 3, 2, 2, 2, 109, 49, 3, 2, 2, 2, 109, 53, 3, 2, 2, 2, 109,
+	57, 3, 2, 2, 2, 109, 70, 3, 2, 2, 2, 109, 83, 3, 2, 2, 2, 109, 96, 3, 2,
+	2, 2, 110, 7, 3, 2, 2, 2, 111, 119, 7, 23, 2, 2, 112, 113, 7, 18, 2, 2,
+	113, 114, 7, 22, 2, 2, 114, 116, 7, 19, 2, 2, 115, 112, 3, 2, 2, 2, 116,
+	117, 3, 2, 2, 2, 117, 115, 3, 2, 2, 2, 117, 118, 3, 2, 2, 2, 118, 120,
+	3, 2, 2, 2, 119, 115, 3, 2, 2, 2, 119, 120, 3, 2, 2, 2, 120, 9, 3, 2, 2,
+	2, 121, 122, 9, 2, 2, 2, 122, 11, 3, 2, 2, 2, 12, 20, 28, 30, 65, 78, 91,
+	104, 109, 117, 119,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 
 var literalNames = []string{
 	"", "'and'", "'or'", "'('", "')'", "'='", "'!='", "'>'", "'<'", "'>='",
-	"'<='", "'in'", "','", "'!in'", "'\u2229'", "'!\u2229'", "'true'", "'false'",
+	"'<='", "'in'", "','", "'!in'", "'\u2229'", "'!\u2229'", "'.'", "'()'",
+	"'true'", "'false'",
 }
 var symbolicNames = []string{
-	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "TRUE",
-	"FALSE", "FIELDNAME", "STRING", "INT", "FLOAT", "WS",
+	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+	"TRUE", "FALSE", "FUNC", "FIELDNAME", "STRING", "INT", "FLOAT", "WS",
 }
 
 var ruleNames = []string{
-	"query", "expr", "booleanExpr", "value",
+	"query", "expr", "booleanExpr", "leftexpr", "value",
 }
 var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
 
@@ -120,13 +129,16 @@ const (
 	YqlParserT__12     = 13
 	YqlParserT__13     = 14
 	YqlParserT__14     = 15
-	YqlParserTRUE      = 16
-	YqlParserFALSE     = 17
-	YqlParserFIELDNAME = 18
-	YqlParserSTRING    = 19
-	YqlParserINT       = 20
-	YqlParserFLOAT     = 21
-	YqlParserWS        = 22
+	YqlParserT__15     = 16
+	YqlParserT__16     = 17
+	YqlParserTRUE      = 18
+	YqlParserFALSE     = 19
+	YqlParserFUNC      = 20
+	YqlParserFIELDNAME = 21
+	YqlParserSTRING    = 22
+	YqlParserINT       = 23
+	YqlParserFLOAT     = 24
+	YqlParserWS        = 25
 )
 
 // YqlParser rules.
@@ -134,7 +146,8 @@ const (
 	YqlParserRULE_query       = 0
 	YqlParserRULE_expr        = 1
 	YqlParserRULE_booleanExpr = 2
-	YqlParserRULE_value       = 3
+	YqlParserRULE_leftexpr    = 3
+	YqlParserRULE_value       = 4
 )
 
 // IQueryContext is an interface to support dynamic dispatch.
@@ -227,7 +240,7 @@ func (p *YqlParser) Query() (localctx IQueryContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(8)
+		p.SetState(10)
 		p.expr(0)
 	}
 
@@ -502,7 +515,7 @@ func (p *YqlParser) expr(_p int) (localctx IExprContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(16)
+	p.SetState(18)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -512,7 +525,7 @@ func (p *YqlParser) expr(_p int) (localctx IExprContext) {
 		_prevctx = localctx
 
 		{
-			p.SetState(11)
+			p.SetState(13)
 			p.BooleanExpr()
 		}
 
@@ -521,15 +534,15 @@ func (p *YqlParser) expr(_p int) (localctx IExprContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(12)
+			p.SetState(14)
 			p.Match(YqlParserT__2)
 		}
 		{
-			p.SetState(13)
+			p.SetState(15)
 			p.expr(0)
 		}
 		{
-			p.SetState(14)
+			p.SetState(16)
 			p.Match(YqlParserT__3)
 		}
 
@@ -537,7 +550,7 @@ func (p *YqlParser) expr(_p int) (localctx IExprContext) {
 		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(26)
+	p.SetState(28)
 	p.GetErrorHandler().Sync(p)
 	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 2, p.GetParserRuleContext())
 
@@ -547,47 +560,47 @@ func (p *YqlParser) expr(_p int) (localctx IExprContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(24)
+			p.SetState(26)
 			p.GetErrorHandler().Sync(p)
 			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 1, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewAndExprContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, YqlParserRULE_expr)
-				p.SetState(18)
+				p.SetState(20)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
 				}
 				{
-					p.SetState(19)
+					p.SetState(21)
 					p.Match(YqlParserT__0)
 				}
 				{
-					p.SetState(20)
+					p.SetState(22)
 					p.expr(4)
 				}
 
 			case 2:
 				localctx = NewOrExprContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, YqlParserRULE_expr)
-				p.SetState(21)
+				p.SetState(23)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 2)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
 				}
 				{
-					p.SetState(22)
+					p.SetState(24)
 					p.Match(YqlParserT__1)
 				}
 				{
-					p.SetState(23)
+					p.SetState(25)
 					p.expr(3)
 				}
 
 			}
 
 		}
-		p.SetState(28)
+		p.SetState(30)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 2, p.GetParserRuleContext())
 	}
@@ -644,8 +657,14 @@ func (s *BooleanExprContext) GetOp() antlr.Token { return s.op }
 
 func (s *BooleanExprContext) SetOp(v antlr.Token) { s.op = v }
 
-func (s *BooleanExprContext) FIELDNAME() antlr.TerminalNode {
-	return s.GetToken(YqlParserFIELDNAME, 0)
+func (s *BooleanExprContext) Leftexpr() ILeftexprContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*ILeftexprContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ILeftexprContext)
 }
 
 func (s *BooleanExprContext) AllValue() []IValueContext {
@@ -712,55 +731,37 @@ func (p *YqlParser) BooleanExpr() (localctx IBooleanExprContext) {
 		}
 	}()
 
-	p.SetState(99)
+	p.SetState(107)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 7, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(29)
-			p.Match(YqlParserFIELDNAME)
+			p.SetState(31)
+			p.Leftexpr()
 		}
 		{
-			p.SetState(30)
+			p.SetState(32)
 
 			var _m = p.Match(YqlParserT__4)
 
 			localctx.(*BooleanExprContext).op = _m
 		}
 		{
-			p.SetState(31)
+			p.SetState(33)
 			p.Value()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(32)
-			p.Match(YqlParserFIELDNAME)
-		}
-		{
-			p.SetState(33)
-
-			var _m = p.Match(YqlParserT__5)
-
-			localctx.(*BooleanExprContext).op = _m
-		}
-		{
-			p.SetState(34)
-			p.Value()
-		}
-
-	case 3:
-		p.EnterOuterAlt(localctx, 3)
-		{
 			p.SetState(35)
-			p.Match(YqlParserFIELDNAME)
+			p.Leftexpr()
 		}
 		{
 			p.SetState(36)
 
-			var _m = p.Match(YqlParserT__6)
+			var _m = p.Match(YqlParserT__5)
 
 			localctx.(*BooleanExprContext).op = _m
 		}
@@ -769,234 +770,381 @@ func (p *YqlParser) BooleanExpr() (localctx IBooleanExprContext) {
 			p.Value()
 		}
 
+	case 3:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(39)
+			p.Leftexpr()
+		}
+		{
+			p.SetState(40)
+
+			var _m = p.Match(YqlParserT__6)
+
+			localctx.(*BooleanExprContext).op = _m
+		}
+		{
+			p.SetState(41)
+			p.Value()
+		}
+
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(38)
-			p.Match(YqlParserFIELDNAME)
+			p.SetState(43)
+			p.Leftexpr()
 		}
 		{
-			p.SetState(39)
+			p.SetState(44)
 
 			var _m = p.Match(YqlParserT__7)
 
 			localctx.(*BooleanExprContext).op = _m
 		}
 		{
-			p.SetState(40)
+			p.SetState(45)
 			p.Value()
 		}
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(41)
-			p.Match(YqlParserFIELDNAME)
+			p.SetState(47)
+			p.Leftexpr()
 		}
 		{
-			p.SetState(42)
+			p.SetState(48)
 
 			var _m = p.Match(YqlParserT__8)
 
 			localctx.(*BooleanExprContext).op = _m
 		}
 		{
-			p.SetState(43)
+			p.SetState(49)
 			p.Value()
 		}
 
 	case 6:
 		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(44)
-			p.Match(YqlParserFIELDNAME)
+			p.SetState(51)
+			p.Leftexpr()
 		}
 		{
-			p.SetState(45)
+			p.SetState(52)
 
 			var _m = p.Match(YqlParserT__9)
 
 			localctx.(*BooleanExprContext).op = _m
 		}
 		{
-			p.SetState(46)
+			p.SetState(53)
 			p.Value()
 		}
 
 	case 7:
 		p.EnterOuterAlt(localctx, 7)
 		{
-			p.SetState(47)
-			p.Match(YqlParserFIELDNAME)
+			p.SetState(55)
+			p.Leftexpr()
 		}
 		{
-			p.SetState(48)
+			p.SetState(56)
 
 			var _m = p.Match(YqlParserT__10)
 
 			localctx.(*BooleanExprContext).op = _m
 		}
 		{
-			p.SetState(49)
+			p.SetState(57)
 			p.Match(YqlParserT__2)
 		}
 		{
-			p.SetState(50)
+			p.SetState(58)
 			p.Value()
 		}
-		p.SetState(55)
+		p.SetState(63)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == YqlParserT__11 {
 			{
-				p.SetState(51)
+				p.SetState(59)
 				p.Match(YqlParserT__11)
 			}
 			{
-				p.SetState(52)
+				p.SetState(60)
 				p.Value()
 			}
 
-			p.SetState(57)
+			p.SetState(65)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(58)
+			p.SetState(66)
 			p.Match(YqlParserT__3)
 		}
 
 	case 8:
 		p.EnterOuterAlt(localctx, 8)
 		{
-			p.SetState(60)
-			p.Match(YqlParserFIELDNAME)
+			p.SetState(68)
+			p.Leftexpr()
 		}
 		{
-			p.SetState(61)
+			p.SetState(69)
 
 			var _m = p.Match(YqlParserT__12)
 
 			localctx.(*BooleanExprContext).op = _m
 		}
 		{
-			p.SetState(62)
+			p.SetState(70)
 			p.Match(YqlParserT__2)
 		}
 		{
-			p.SetState(63)
+			p.SetState(71)
 			p.Value()
 		}
-		p.SetState(68)
+		p.SetState(76)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == YqlParserT__11 {
 			{
-				p.SetState(64)
+				p.SetState(72)
 				p.Match(YqlParserT__11)
 			}
 			{
-				p.SetState(65)
+				p.SetState(73)
 				p.Value()
 			}
 
-			p.SetState(70)
+			p.SetState(78)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(71)
+			p.SetState(79)
 			p.Match(YqlParserT__3)
 		}
 
 	case 9:
 		p.EnterOuterAlt(localctx, 9)
 		{
-			p.SetState(73)
-			p.Match(YqlParserFIELDNAME)
+			p.SetState(81)
+			p.Leftexpr()
 		}
 		{
-			p.SetState(74)
+			p.SetState(82)
 
 			var _m = p.Match(YqlParserT__13)
 
 			localctx.(*BooleanExprContext).op = _m
 		}
 		{
-			p.SetState(75)
+			p.SetState(83)
 			p.Match(YqlParserT__2)
 		}
 		{
-			p.SetState(76)
+			p.SetState(84)
 			p.Value()
 		}
-		p.SetState(81)
+		p.SetState(89)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == YqlParserT__11 {
 			{
-				p.SetState(77)
+				p.SetState(85)
 				p.Match(YqlParserT__11)
 			}
 			{
-				p.SetState(78)
+				p.SetState(86)
 				p.Value()
 			}
 
-			p.SetState(83)
+			p.SetState(91)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(84)
+			p.SetState(92)
 			p.Match(YqlParserT__3)
 		}
 
 	case 10:
 		p.EnterOuterAlt(localctx, 10)
 		{
-			p.SetState(86)
-			p.Match(YqlParserFIELDNAME)
+			p.SetState(94)
+			p.Leftexpr()
 		}
 		{
-			p.SetState(87)
+			p.SetState(95)
 
 			var _m = p.Match(YqlParserT__14)
 
 			localctx.(*BooleanExprContext).op = _m
 		}
 		{
-			p.SetState(88)
+			p.SetState(96)
 			p.Match(YqlParserT__2)
 		}
 		{
-			p.SetState(89)
+			p.SetState(97)
 			p.Value()
 		}
-		p.SetState(94)
+		p.SetState(102)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == YqlParserT__11 {
 			{
-				p.SetState(90)
+				p.SetState(98)
 				p.Match(YqlParserT__11)
 			}
 			{
-				p.SetState(91)
+				p.SetState(99)
 				p.Value()
 			}
 
-			p.SetState(96)
+			p.SetState(104)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(97)
+			p.SetState(105)
 			p.Match(YqlParserT__3)
+		}
+
+	}
+
+	return localctx
+}
+
+// ILeftexprContext is an interface to support dynamic dispatch.
+type ILeftexprContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsLeftexprContext differentiates from other interfaces.
+	IsLeftexprContext()
+}
+
+type LeftexprContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyLeftexprContext() *LeftexprContext {
+	var p = new(LeftexprContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = YqlParserRULE_leftexpr
+	return p
+}
+
+func (*LeftexprContext) IsLeftexprContext() {}
+
+func NewLeftexprContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LeftexprContext {
+	var p = new(LeftexprContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = YqlParserRULE_leftexpr
+
+	return p
+}
+
+func (s *LeftexprContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *LeftexprContext) FIELDNAME() antlr.TerminalNode {
+	return s.GetToken(YqlParserFIELDNAME, 0)
+}
+
+func (s *LeftexprContext) AllFUNC() []antlr.TerminalNode {
+	return s.GetTokens(YqlParserFUNC)
+}
+
+func (s *LeftexprContext) FUNC(i int) antlr.TerminalNode {
+	return s.GetToken(YqlParserFUNC, i)
+}
+
+func (s *LeftexprContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *LeftexprContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *LeftexprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(YqlListener); ok {
+		listenerT.EnterLeftexpr(s)
+	}
+}
+
+func (s *LeftexprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(YqlListener); ok {
+		listenerT.ExitLeftexpr(s)
+	}
+}
+
+func (p *YqlParser) Leftexpr() (localctx ILeftexprContext) {
+	localctx = NewLeftexprContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 6, YqlParserRULE_leftexpr)
+	var _la int
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(109)
+		p.Match(YqlParserFIELDNAME)
+	}
+	p.SetState(117)
+	p.GetErrorHandler().Sync(p)
+	_la = p.GetTokenStream().LA(1)
+
+	if _la == YqlParserT__15 {
+		p.SetState(113)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+
+		for ok := true; ok; ok = _la == YqlParserT__15 {
+			{
+				p.SetState(110)
+				p.Match(YqlParserT__15)
+			}
+			{
+				p.SetState(111)
+				p.Match(YqlParserFUNC)
+			}
+			{
+				p.SetState(112)
+				p.Match(YqlParserT__16)
+			}
+
+			p.SetState(115)
+			p.GetErrorHandler().Sync(p)
+			_la = p.GetTokenStream().LA(1)
 		}
 
 	}
@@ -1084,7 +1232,7 @@ func (s *ValueContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *YqlParser) Value() (localctx IValueContext) {
 	localctx = NewValueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 6, YqlParserRULE_value)
+	p.EnterRule(localctx, 8, YqlParserRULE_value)
 	var _la int
 
 	defer func() {
@@ -1104,7 +1252,7 @@ func (p *YqlParser) Value() (localctx IValueContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(101)
+	p.SetState(119)
 	_la = p.GetTokenStream().LA(1)
 
 	if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<YqlParserTRUE)|(1<<YqlParserFALSE)|(1<<YqlParserSTRING)|(1<<YqlParserINT)|(1<<YqlParserFLOAT))) != 0) {

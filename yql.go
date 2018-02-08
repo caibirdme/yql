@@ -20,6 +20,8 @@ type yqlListener struct {
 	*grammar.BaseYqlListener
 	stack       boolStack
 	data        map[string]interface{}
+	fieldName   string
+	funcs       []string
 	notFoundErr error
 }
 
@@ -28,10 +30,16 @@ func (l *yqlListener) ExitBooleanExpr(ctx *grammar.BooleanExprContext) {
 		return
 	}
 	operator := ctx.GetOp().GetText()
-	fieldName := ctx.FIELDNAME().GetText()
+	fieldName := l.fieldName
 	actualValue, ok := l.data[fieldName]
 	if !ok {
 		l.notFoundErr = fmt.Errorf("%s not provided", fieldName)
+		return
+	}
+	var err error
+	actualValue, err = funcRuner(actualValue, l.funcs)
+	if err != nil {
+		l.notFoundErr = err
 		return
 	}
 	allValue := ctx.AllValue()
@@ -41,6 +49,18 @@ func (l *yqlListener) ExitBooleanExpr(ctx *grammar.BooleanExprContext) {
 	}
 	res := compare(actualValue, valueArr, operator)
 	l.stack.Push(res)
+}
+
+func (l *yqlListener) ExitLeftexpr(ctx *grammar.LeftexprContext) {
+	l.fieldName = ctx.FIELDNAME().GetText()
+	funcs := ctx.AllFUNC()
+	l.funcs = l.funcs[:0]
+	if 0 == len(funcs) {
+		return
+	}
+	for _, f := range funcs {
+		l.funcs = append(l.funcs, f.GetText())
+	}
 }
 
 func (l *yqlListener) ExitOrExpr(ctx *grammar.OrExprContext) {
@@ -89,7 +109,7 @@ func match(rawYQL string, data map[string]interface{}) (ok bool, err error) {
 	parser.BuildParseTrees = true
 	parser.SetErrorHandler(antlr.NewBailErrorStrategy())
 	tree := parser.Query()
-	l := &yqlListener{stack: stack.NewStack()}
+	l := &yqlListener{stack: stack.NewStack(), funcs: make([]string, 0, 1)}
 	l.stack.Init()
 	l.data = data
 	antlr.ParseTreeWalkerDefault.Walk(l, tree)

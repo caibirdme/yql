@@ -8,23 +8,25 @@ expr: booleanExpr       #boolExpr
     | '(' expr ')'      #embbedExpr
     ;
 
-booleanExpr: FIELDNAME op='=' value
-    | FIELDNAME op='!=' value
-    | FIELDNAME op='>' value
-    | FIELDNAME op='<' value
-    | FIELDNAME op='>=' value
-    | FIELDNAME op='<=' value
-    | FIELDNAME op='in' '(' value (',' value)* ')'
-    | FIELDNAME op='!in' '(' value (',' value)* ')'
-    | FIELDNAME op='∩' '(' value (',' value)* ')'
-    | FIELDNAME op='!∩' '(' value (',' value)* ')'
+booleanExpr: leftexpr op='=' value
+    | leftexpr op='!=' value
+    | leftexpr op='>' value
+    | leftexpr op='<' value
+    | leftexpr op='>=' value
+    | leftexpr op='<=' value
+    | leftexpr op='in' '(' value (',' value)* ')'
+    | leftexpr op='!in' '(' value (',' value)* ')'
+    | leftexpr op='∩' '(' value (',' value)* ')'
+    | leftexpr op='!∩' '(' value (',' value)* ')'
     ;
-
+leftexpr: FIELDNAME (('.' FUNC '()')+)?
+    ;
 value: STRING | INT | FLOAT | TRUE | FALSE;
 
 TRUE: 'true';
 FALSE: 'false';
-FIELDNAME: [a-zA-Z]+;
+FUNC: 'count'|'sum'|'avg'|'max'|'min';
+FIELDNAME: ([a-zA-Z]|'_')+;
 STRING: '\'' .*? '\'';
 fragment DIGIT: [0-9];
 INT: ('+'|'-')? DIGIT+;

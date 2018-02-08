@@ -25,8 +25,14 @@ func ExampleMatch() {
 		"score": []int64{3, 5, 2},
 	})
 	fmt.Println(result)
+	rawYQL = `score.sum() > 10`
+	result, _ = yql.Match(rawYQL, map[string]interface{}{
+		"score": []int{1, 2, 3, 4, 5},
+	})
+	fmt.Println(result)
 	//Output:
 	//true
 	//true
 	//false
+	//true
 }

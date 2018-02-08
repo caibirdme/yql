@@ -13,7 +13,7 @@ See more examples in the `yql_test.go` and godoc.
 
 ``` go
 	rawYQL := `name='deen' and age>=23 and (hobby in ('soccer', 'swim') or score>90))`
-	result := yql.Match(rawYQL, map[string]interface{}{
+	result, _ := yql.Match(rawYQL, map[string]interface{}{
 		"name":  "deen",
 		"age":   int64(23),
 		"hobby": "basketball",
@@ -21,20 +21,36 @@ See more examples in the `yql_test.go` and godoc.
 	})
 	fmt.Println(result)
 	rawYQL = `score ∩ (7,1,9,5,3)`
-	result = yql.Match(rawYQL, map[string]interface{}{
+	result, _ = yql.Match(rawYQL, map[string]interface{}{
 		"score": []int64{3, 100, 200},
 	})
 	fmt.Println(result)
 	rawYQL = `score in (7,1,9,5,3)`
-	result = yql.Match(rawYQL, map[string]interface{}{
+	result, _ = yql.Match(rawYQL, map[string]interface{}{
 		"score": []int64{3, 5, 2},
+	})
+	fmt.Println(result)
+	rawYQL = `score.sum() > 10`
+	result, _ = yql.Match(rawYQL, map[string]interface{}{
+		"score": []int{1, 2, 3, 4, 5},
 	})
 	fmt.Println(result)
 	//Output:
 	//true
 	//true
 	//false
+	//true
 ```
+
+### Helpers
+In `score.sum() > 10`, `sum` is a helper function which adds up all the numbers in score, which also means the type of score must be one of the []int,[]int64 or []float64.
+
+This repo is in the early stage, so now there are just a few helpers, feel free to create an issue about your needs. Supported helpers are listed below:
+* sum: ...
+* count: return the length of a slice or 1 if not a slice
+* avg: return the average number of a slice(`float64(total)/float64(len(slice))`)
+* max: return the maximum number in a slice
+* min: return the minimum number in a slice
 
 ### Usage scenario
 Obviously, it's easy to use in rule engine.
@@ -74,38 +90,19 @@ func isVIP(user User) bool {
 Even, you can use `json.Marshal` to generate the map[string]interface{} if you don't want to write it manually. Make sure the structure tag should be same as the name in rawYQL.
 
 ### Syntax
+See [grammar file](./internal/grammar/Yql.g4)
+
+### Compatibility promise
+The API `Match`is stable now. Its grammar won't change any more, and what I only will do next is to optimize, speed up and add more helpers if needed.
+
+
+### Further Trial
+Though it's kinder difficult to create a robust new Go compiler, there're still some interesting things could do. For example, bringing lambda function in Go which maybe look like:
+```go
+var scores = []int{1,2,3,4,5,6,7,8,9,10}
+newSlice := yql.Lambda(`filter(v: v & 1 == 0).map(v: v*v)`, scores).IntArr()
+//[]int{4,16,36,64,100}
 ```
-grammar Yql;
+If the lambda function won't change all time, it can be cached like opcode, which is as fast as the compiled code. And in most cases, who care?(pythoner?)
 
-query: expr;
-
-expr: booleanExpr       #boolExpr
-    | expr 'and' expr   #andExpr
-    | expr 'or' expr    #orExpr
-    | '(' expr ')'      #embbedExpr
-    ;
-
-booleanExpr: FIELDNAME op='=' value
-    | FIELDNAME op='!=' value
-    | FIELDNAME op='>' value
-    | FIELDNAME op='<' value
-    | FIELDNAME op='>=' value
-    | FIELDNAME op='<=' value
-    | FIELDNAME op='in' '(' value (',' value)* ')'
-    | FIELDNAME op='!in' '(' value (',' value)* ')'
-    | FIELDNAME op='∩' '(' value (',' value)* ')'
-    | FIELDNAME op='!∩' '(' value (',' value)* ')'
-    ;
-
-value: STRING | INT | FLOAT | TRUE | FALSE;
-
-TRUE: 'true';
-FALSE: 'false';
-FIELDNAME: [a-zA-Z]+;
-STRING: '\'' .*? '\'';
-fragment DIGIT: [0-9];
-INT: ('+'|'-')? DIGIT+;
-FLOAT: ('+'|'-')? DIGIT+ '.' DIGIT*;
-WS: [ \t\r\n]+ -> skip;
-
-```
+It's not easy but interesting, isn't it? Welcome to join me, open some issues and talk about your ideas with me. Maybe one day it can become a pre-compile tool like [babel](http://babeljs.io/) in javascript. 
