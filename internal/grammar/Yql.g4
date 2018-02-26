@@ -8,16 +8,8 @@ expr: booleanExpr       #boolExpr
     | '(' expr ')'      #embbedExpr
     ;
 
-booleanExpr: leftexpr op='=' value
-    | leftexpr op='!=' value
-    | leftexpr op='>' value
-    | leftexpr op='<' value
-    | leftexpr op='>=' value
-    | leftexpr op='<=' value
-    | leftexpr op='in' '(' value (',' value)* ')'
-    | leftexpr op='!in' '(' value (',' value)* ')'
-    | leftexpr op='∩' '(' value (',' value)* ')'
-    | leftexpr op='!∩' '(' value (',' value)* ')'
+booleanExpr: leftexpr op=('='|'!='|'>'|'<'|'>='|'<=') value
+    | leftexpr op=('in'|'!in'|'∩'|'!∩') '(' value (',' value)* ')'
     ;
 leftexpr: FIELDNAME (('.' FUNC '()')+)?
     ;
