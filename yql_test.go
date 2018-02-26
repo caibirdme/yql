@@ -8,6 +8,10 @@ import (
 
 func TestHandleSyntaxErr(t *testing.T) {
 	var testData = []string{
+		"asdasdasd",
+		"((a=1",
+		"((a='foo'",
+		"((a='foo')",
 		"a=foo",
 		"a in (foo,bar)",
 		"a in (foo)",
@@ -1019,7 +1023,8 @@ func TestRule_Match(t *testing.T) {
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
-		ruler := Rule(tc.rawYql)
+		ruler, err := Rule(tc.rawYql)
+		ass.NoError(err)
 		ok, err := ruler.Match(tc.data)
 		ass.NoError(err)
 		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
@@ -1087,7 +1092,10 @@ func TestRule_Match_Multi(t *testing.T) {
 		},
 	}
 	ass := assert.New(t)
-	ruler := Rule(`age>23 and (sex in ('boy','girl') or sex='other') and score>=95 and rank !in ('b','c','d')`)
+	ruler, err := Rule(`age>23 and (sex in ('boy','girl') or sex='other') and score>=95 and rank !in ('b','c','d')`)
+	if !ass.NoError(err) {
+		t.FailNow()
+	}
 	for _, tc := range testData {
 		ok, err := ruler.Match(tc.data)
 		ass.NoError(err)

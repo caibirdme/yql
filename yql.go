@@ -81,17 +81,18 @@ func (l *yqlListener) ExitAndExpr(ctx *grammar.AndExprContext) {
 	l.stack.Push(q1 && q2)
 }
 
-type lexerErrHandler struct {
-	*antlr.DefaultErrorListener
+type bailLexer struct {
+	*grammar.YqlLexer
 }
 
-func (d *lexerErrHandler) SyntaxError(recognizer antlr.Recognizer, offendingSymbol interface{}, line, column int, msg string, e antlr.RecognitionException) {
-	panic(e)
+// Override default Recover and do nothing
+// lexer can quit when any error occur
+func (l *bailLexer) Recover(r antlr.RecognitionException) {
+	panic(r)
 }
 
 var (
-	lexerErrHandlerInstance = &lexerErrHandler{DefaultErrorListener: antlr.NewDefaultErrorListener()}
-	bailErrStrategy         = antlr.NewBailErrorStrategy()
+	bailErrStrategy = antlr.NewBailErrorStrategy()
 )
 
 func match(rawYQL string, data map[string]interface{}) (ok bool, err error) {
@@ -105,8 +106,7 @@ func match(rawYQL string, data map[string]interface{}) (ok bool, err error) {
 		}
 	}()
 	inputStream := antlr.NewInputStream(rawYQL)
-	lexer := grammar.NewYqlLexer(inputStream)
-	lexer.AddErrorListener(lexerErrHandlerInstance)
+	lexer := &bailLexer{grammar.NewYqlLexer(inputStream)}
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	parser := grammar.NewYqlParser(stream)
 	parser.BuildParseTrees = true
@@ -126,17 +126,17 @@ func match(rawYQL string, data map[string]interface{}) (ok bool, err error) {
 // Ruler caches an AST
 type cachedAST struct {
 	query grammar.IQueryContext
-	err   error
 }
 
+// Ruler represents an AST structure and could do the match according to input data
 type Ruler interface {
 	Match(map[string]interface{}) (bool, error)
 }
 
 // Match do the comparison according to the input data
 func (ast cachedAST) Match(data map[string]interface{}) (bool, error) {
-	if nil != ast.err || 0 == len(data) {
-		return false, ast.err
+	if 0 == len(data) {
+		return false, nil
 	}
 	l := &yqlListener{stack: stack.NewStack(), funcs: make([]string, 0, 1)}
 	l.stack.Init()
@@ -149,25 +149,25 @@ func (ast cachedAST) Match(data map[string]interface{}) (bool, error) {
 }
 
 // Rule analyze a rule and store the AST
+// it returns error when receives illegal yql expression
 // It's more faster than using Match directly
-func Rule(rawYQL string) (ruler Ruler) {
+func Rule(rawYQL string) (ruler Ruler, err error) {
 	ast := cachedAST{}
 	defer func() {
 		if r := recover(); nil != r {
-			ast.err = fmt.Errorf("%v", r)
+			err = fmt.Errorf("%v", r)
 			ruler = ast
 		}
 	}()
 	inputStream := antlr.NewInputStream(rawYQL)
-	lexer := grammar.NewYqlLexer(inputStream)
-	lexer.AddErrorListener(lexerErrHandlerInstance)
+	lexer := &bailLexer{grammar.NewYqlLexer(inputStream)}
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	parser := grammar.NewYqlParser(stream)
 	parser.BuildParseTrees = true
 	parser.RemoveErrorListeners()
 	parser.SetErrorHandler(bailErrStrategy)
 	ast.query = parser.Query()
-	return ast
+	return ast, nil
 }
 
 // Match interprete the rawYQL and execute it with the provided data

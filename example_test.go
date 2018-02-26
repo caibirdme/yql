@@ -39,7 +39,7 @@ func ExampleMatch() {
 
 func ExampleRule() {
 	rawYQL := `name='deen' and age>=23 and (hobby in ('soccer', 'swim') or score>90)`
-	ruler := yql.Rule(rawYQL)
+	ruler, _ := yql.Rule(rawYQL)
 	result, _ := ruler.Match(map[string]interface{}{
 		"name":  "deen",
 		"age":   23,
