@@ -46,7 +46,7 @@ And In most cases, you can use `Rule` to cache the AST and then use `Match` to g
 
 ```go
 	rawYQL := `name='deen' and age>=23 and (hobby in ('soccer', 'swim') or score>90)`
-	ruler := yql.Rule(rawYQL)
+	ruler,_ := yql.Rule(rawYQL)
 
 	result, _ := ruler.Match(map[string]interface{}{
 		"name":  "deen",
