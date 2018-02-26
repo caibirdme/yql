@@ -42,6 +42,38 @@ See more examples in the `yql_test.go` and godoc.
 	//true
 ```
 
+And In most cases, you can use `Rule` to cache the AST and then use `Match` to get the result, which could avoid hundreds of thousands of repeated parsing process.
+
+```go
+	rawYQL := `name='deen' and age>=23 and (hobby in ('soccer', 'swim') or score>90)`
+	ruler := yql.Rule(rawYQL)
+
+	result, _ := ruler.Match(map[string]interface{}{
+		"name":  "deen",
+		"age":   23,
+		"hobby": "basketball",
+		"score": int64(100),
+	})
+	fmt.Println(result)
+	result, _ = ruler.Match(map[string]interface{}{
+		"name":  "deen",
+		"age":   23,
+		"hobby": "basketball",
+		"score": int64(90),
+	})
+	fmt.Println(result)
+	//Output:
+	//true
+	//false
+```
+
+Though the to be matched data is the type of `map[string]interface{}`, there're only 5 types supported:
+* int
+* int64
+* float64
+* string
+* bool
+
 ### Helpers
 In `score.sum() > 10`, `sum` is a helper function which adds up all the numbers in score, which also means the type of score must be one of the []int,[]int64 or []float64.
 
@@ -100,7 +132,7 @@ The API `Match`is stable now. Its grammar won't change any more, and what I only
 Though it's kinder difficult to create a robust new Go compiler, there're still some interesting things could do. For example, bringing lambda function in Go which maybe look like:
 ```go
 var scores = []int{1,2,3,4,5,6,7,8,9,10}
-newSlice := yql.Lambda(`filter(v: v & 1 == 0).map(v: v*v)`, scores).IntArr()
+newSlice := yql.Filter(`(v) => v & 1 == 0`).Map(`v => v*v`).Call(scores).IntArr()
 //[]int{4,16,36,64,100}
 ```
 If the lambda function won't change all time, it can be cached like opcode, which is as fast as the compiled code. And in most cases, who care?(pythoner?)

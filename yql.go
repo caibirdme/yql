@@ -89,6 +89,11 @@ func (d *lexerErrHandler) SyntaxError(recognizer antlr.Recognizer, offendingSymb
 	panic(e)
 }
 
+var (
+	lexerErrHandlerInstance = &lexerErrHandler{DefaultErrorListener: antlr.NewDefaultErrorListener()}
+	bailErrStrategy         = antlr.NewBailErrorStrategy()
+)
+
 func match(rawYQL string, data map[string]interface{}) (ok bool, err error) {
 	if 0 == len(data) {
 		return false, nil
@@ -101,13 +106,12 @@ func match(rawYQL string, data map[string]interface{}) (ok bool, err error) {
 	}()
 	inputStream := antlr.NewInputStream(rawYQL)
 	lexer := grammar.NewYqlLexer(inputStream)
-	lexer.AddErrorListener(&lexerErrHandler{
-		DefaultErrorListener: antlr.NewDefaultErrorListener(),
-	})
+	lexer.AddErrorListener(lexerErrHandlerInstance)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	parser := grammar.NewYqlParser(stream)
 	parser.BuildParseTrees = true
-	parser.SetErrorHandler(antlr.NewBailErrorStrategy())
+	parser.RemoveErrorListeners()
+	parser.SetErrorHandler(bailErrStrategy)
 	tree := parser.Query()
 	l := &yqlListener{stack: stack.NewStack(), funcs: make([]string, 0, 1)}
 	l.stack.Init()
@@ -117,6 +121,53 @@ func match(rawYQL string, data map[string]interface{}) (ok bool, err error) {
 		return false, l.notFoundErr
 	}
 	return l.stack.Pop(), nil
+}
+
+// Ruler caches an AST
+type cachedAST struct {
+	query grammar.IQueryContext
+	err   error
+}
+
+type Ruler interface {
+	Match(map[string]interface{}) (bool, error)
+}
+
+// Match do the comparison according to the input data
+func (ast cachedAST) Match(data map[string]interface{}) (bool, error) {
+	if nil != ast.err || 0 == len(data) {
+		return false, ast.err
+	}
+	l := &yqlListener{stack: stack.NewStack(), funcs: make([]string, 0, 1)}
+	l.stack.Init()
+	l.data = data
+	antlr.ParseTreeWalkerDefault.Walk(l, ast.query)
+	if l.notFoundErr != nil {
+		return false, l.notFoundErr
+	}
+	return l.stack.Pop(), nil
+}
+
+// Rule analyze a rule and store the AST
+// It's more faster than using Match directly
+func Rule(rawYQL string) (ruler Ruler) {
+	ast := cachedAST{}
+	defer func() {
+		if r := recover(); nil != r {
+			ast.err = fmt.Errorf("%v", r)
+			ruler = ast
+		}
+	}()
+	inputStream := antlr.NewInputStream(rawYQL)
+	lexer := grammar.NewYqlLexer(inputStream)
+	lexer.AddErrorListener(lexerErrHandlerInstance)
+	stream := antlr.NewCommonTokenStream(lexer, 0)
+	parser := grammar.NewYqlParser(stream)
+	parser.BuildParseTrees = true
+	parser.RemoveErrorListeners()
+	parser.SetErrorHandler(bailErrStrategy)
+	ast.query = parser.Query()
+	return ast
 }
 
 // Match interprete the rawYQL and execute it with the provided data

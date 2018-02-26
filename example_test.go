@@ -7,10 +7,10 @@ import (
 )
 
 func ExampleMatch() {
-	rawYQL := `name='deen' and age>=23 and (hobby in ('soccer', 'swim') or score>90))`
+	rawYQL := `name='deen' and age>=23 and (hobby in ('soccer', 'swim') or score>90)`
 	result, _ := yql.Match(rawYQL, map[string]interface{}{
 		"name":  "deen",
-		"age":   int64(23),
+		"age":   23,
 		"hobby": "basketball",
 		"score": int64(100),
 	})
@@ -35,4 +35,26 @@ func ExampleMatch() {
 	//true
 	//false
 	//true
+}
+
+func ExampleRule() {
+	rawYQL := `name='deen' and age>=23 and (hobby in ('soccer', 'swim') or score>90)`
+	ruler := yql.Rule(rawYQL)
+	result, _ := ruler.Match(map[string]interface{}{
+		"name":  "deen",
+		"age":   23,
+		"hobby": "basketball",
+		"score": int64(100),
+	})
+	fmt.Println(result)
+	result, _ = ruler.Match(map[string]interface{}{
+		"name":  "deen",
+		"age":   23,
+		"hobby": "basketball",
+		"score": int64(90),
+	})
+	fmt.Println(result)
+	//Output:
+	//true
+	//false
 }

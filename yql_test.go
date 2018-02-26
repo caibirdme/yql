@@ -13,7 +13,6 @@ func TestHandleSyntaxErr(t *testing.T) {
 		"a in (foo)",
 		"a ∩ (foo)",
 		"a !=   foo",
-		"a = --5",
 	}
 	data := map[string]interface{}{
 		"a": "foo",
@@ -954,5 +953,144 @@ func TestMatch(t *testing.T) {
 		ok, err := Match(tc.rawYql, tc.data)
 		ass.NoError(err)
 		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+	}
+}
+
+func TestRule_Match(t *testing.T) {
+	var testData = []struct {
+		rawYql string
+		data   map[string]interface{}
+		out    bool
+	}{
+		{
+			rawYql: `age>23 and (sex in ('boy','girl') or sex='other') and score>=95 and rank !in ('b','c','d')`,
+			data: map[string]interface{}{
+				"age":   int64(24),
+				"sex":   "boy",
+				"score": int64(95),
+				"rank":  "s",
+			},
+			out: true,
+		},
+		{
+			rawYql: `age>23 and (sex in ('boy','girl') or sex='other')`,
+			data: map[string]interface{}{
+				"age": int64(24),
+				"sex": "other",
+			},
+			out: true,
+		},
+		{
+			rawYql: `age>23 and (sex in ('boy','girl') or sex='other')`,
+			data: map[string]interface{}{
+				"age": int64(24),
+				"sex": "boy",
+			},
+			out: true,
+		},
+		{
+			rawYql: `age>23 and (sex in ('boy','girl') or some!=5) and words='hello world'`,
+			data: map[string]interface{}{
+				"age":   int64(211),
+				"sex":   "boy",
+				"some":  int64(6),
+				"words": "hello world",
+			},
+			out: true,
+		},
+		{
+			rawYql: `age>23 and (sex in ('boy','girl') or some!=5) and words='hello world'`,
+			data: map[string]interface{}{
+				"age":   int64(21),
+				"sex":   "boy",
+				"some":  int64(6),
+				"words": "hello world",
+			},
+			out: false,
+		},
+		{
+			rawYql: `tag in (1,3,5) and status!=0`,
+			data: map[string]interface{}{
+				"tag":    []int64{1, 5},
+				"status": int64(3),
+			},
+			out: true,
+		},
+	}
+	ass := assert.New(t)
+	for _, tc := range testData {
+		ruler := Rule(tc.rawYql)
+		ok, err := ruler.Match(tc.data)
+		ass.NoError(err)
+		ass.Equal(tc.out, ok, "rawYql=%s||data=%+v", tc.rawYql, tc.data)
+	}
+}
+
+func TestRule_Match_Multi(t *testing.T) {
+	var testData = []struct {
+		data map[string]interface{}
+		out  bool
+	}{
+		{
+			data: map[string]interface{}{
+				"age":   int64(24),
+				"sex":   "boy",
+				"score": int64(95),
+				"rank":  "s",
+			},
+			out: true,
+		},
+		{
+			data: map[string]interface{}{
+				"age":   int64(23),
+				"sex":   "boy",
+				"score": int64(95),
+				"rank":  "s",
+			},
+			out: false,
+		},
+		{
+			data: map[string]interface{}{
+				"age":   int64(24),
+				"sex":   "boy",
+				"score": int64(95),
+				"rank":  "",
+			},
+			out: true,
+		},
+		{
+			data: map[string]interface{}{
+				"age":   int64(24),
+				"sex":   "boy",
+				"score": int64(95),
+				"rank":  "a",
+			},
+			out: true,
+		},
+		{
+			data: map[string]interface{}{
+				"age":   int64(23),
+				"sex":   "boy",
+				"score": int64(92),
+				"rank":  "s",
+			},
+			out: false,
+		},
+		{
+			data: map[string]interface{}{
+				"age":   int64(23),
+				"sex":   "other",
+				"score": int64(97),
+				"rank":  "s",
+			},
+			out: false,
+		},
+	}
+	ass := assert.New(t)
+	ruler := Rule(`age>23 and (sex in ('boy','girl') or sex='other') and score>=95 and rank !in ('b','c','d')`)
+	for _, tc := range testData {
+		ok, err := ruler.Match(tc.data)
+		ass.NoError(err)
+		ass.Equal(tc.out, ok, "data=%+v", tc.data)
 	}
 }
