@@ -1,5 +1,9 @@
 package stack
 
+import (
+	"sync"
+)
+
 // BoolStack implement a basic stack
 type BoolStack struct {
 	data []bool
@@ -23,15 +27,19 @@ func (s *BoolStack) Push(b bool) {
 	s.data = append(s.data, b)
 }
 
-// Init initializes the stack
-func (s *BoolStack) Init() {
-	if s.sp > -1 {
-		s.data = s.data[:0]
+// NewStack create a new stack object
+// Make sure invoking release to avoid memory leak
+func NewStack() (stack *BoolStack, release func()) {
+	b := pool.Get().(*BoolStack)
+	if b.sp > -1 {
+		b.sp = -1
+		b.data = b.data[:0]
 	}
-	s.sp = -1
+	return b, func() { pool.Put(b) }
 }
 
-// NewStack create a new stack object
-func NewStack() *BoolStack {
-	return &BoolStack{sp: -1}
+var pool = sync.Pool{
+	New: func() interface{} {
+		return &BoolStack{sp: -1}
+	},
 }

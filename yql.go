@@ -12,8 +12,6 @@ import (
 type boolStack interface {
 	Push(bool)
 	Pop() bool
-	// Init initialize the stack, considering the stack will be reused
-	Init()
 }
 
 type yqlListener struct {
@@ -113,8 +111,9 @@ func match(rawYQL string, data map[string]interface{}) (ok bool, err error) {
 	parser.RemoveErrorListeners()
 	parser.SetErrorHandler(bailErrStrategy)
 	tree := parser.Query()
-	l := &yqlListener{stack: stack.NewStack(), funcs: make([]string, 0, 1)}
-	l.stack.Init()
+	s, release := stack.NewStack()
+	defer release()
+	l := &yqlListener{stack: s, funcs: make([]string, 0, 1)}
 	l.data = data
 	antlr.ParseTreeWalkerDefault.Walk(l, tree)
 	if l.notFoundErr != nil {
@@ -138,8 +137,9 @@ func (ast cachedAST) Match(data map[string]interface{}) (bool, error) {
 	if 0 == len(data) {
 		return false, nil
 	}
-	l := &yqlListener{stack: stack.NewStack(), funcs: make([]string, 0, 1)}
-	l.stack.Init()
+	s, release := stack.NewStack()
+	defer release()
+	l := &yqlListener{stack: s, funcs: make([]string, 0, 1)}
 	l.data = data
 	antlr.ParseTreeWalkerDefault.Walk(l, ast.query)
 	if l.notFoundErr != nil {
