@@ -132,9 +132,14 @@ The API `Match`is stable now. Its grammar won't change any more, and what I only
 Though it's kinder difficult to create a robust new Go compiler, there're still some interesting things could do. For example, bringing lambda function in Go which maybe look like:
 ```go
 var scores = []int{1,2,3,4,5,6,7,8,9,10}
-newSlice := yql.Filter(`(v) => v & 1 == 0`).Map(`v => v*v`).Call(scores).IntArr()
+newSlice := yql.Filter(`(v) => v % 2 == 0`).Map(`v => v*v`).Call(scores).Interface()
 //[]int{4,16,36,64,100}
 ```
 If the lambda function won't change all time, it can be cached like opcode, which is as fast as the compiled code. And in most cases, who care?(pythoner?)
 
-It's not easy but interesting, isn't it? Welcome to join me, open some issues and talk about your ideas with me. Maybe one day it can become a pre-compile tool like [babel](http://babeljs.io/) in javascript. 
+It's not easy but interesting, isn't it? Welcome to join me, open some issues and talk about your ideas with me. Maybe one day it can become a pre-compile tool like [babel](http://babeljs.io/) in javascript.  
+
+#### Attention
+`Lambda expression` now is in its very early stage, **DO NOT USE IT IN PRODUCTION**.
+
+Now only `Filter` is supported, you can take a quick preview in [test case](/lambda/lambda_test.go)
