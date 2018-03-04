@@ -15,7 +15,7 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 37, 96, 4,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 39, 90, 4,
 	2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7, 4,
 	8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 3, 2, 3, 2, 3, 2, 3, 2, 3, 3, 3, 3,
 	3, 3, 3, 3, 7, 3, 29, 10, 3, 12, 3, 14, 3, 32, 11, 3, 5, 3, 34, 10, 3,
@@ -23,52 +23,49 @@ var parserATN = []uint16{
 	7, 6, 47, 10, 6, 12, 6, 14, 6, 50, 11, 6, 3, 7, 3, 7, 3, 8, 3, 8, 3, 8,
 	3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 5, 9, 63, 10, 9, 3, 9, 3, 9, 3, 9,
 	3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9,
-	3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 7, 9, 86, 10, 9, 12, 9, 14, 9, 89,
-	11, 9, 3, 10, 3, 10, 3, 10, 5, 10, 94, 10, 10, 3, 10, 2, 3, 16, 11, 2,
-	4, 6, 8, 10, 12, 14, 16, 18, 2, 9, 4, 2, 29, 33, 36, 36, 3, 2, 8, 10, 3,
-	2, 11, 12, 3, 2, 13, 14, 3, 2, 15, 18, 3, 2, 19, 20, 5, 2, 8, 8, 11, 12,
-	23, 26, 2, 99, 2, 20, 3, 2, 2, 2, 4, 24, 3, 2, 2, 2, 6, 39, 3, 2, 2, 2,
-	8, 41, 3, 2, 2, 2, 10, 43, 3, 2, 2, 2, 12, 51, 3, 2, 2, 2, 14, 53, 3, 2,
-	2, 2, 16, 62, 3, 2, 2, 2, 18, 93, 3, 2, 2, 2, 20, 21, 5, 4, 3, 2, 21, 22,
-	7, 3, 2, 2, 22, 23, 5, 16, 9, 2, 23, 3, 3, 2, 2, 2, 24, 33, 7, 4, 2, 2,
-	25, 30, 7, 27, 2, 2, 26, 27, 7, 5, 2, 2, 27, 29, 7, 27, 2, 2, 28, 26, 3,
-	2, 2, 2, 29, 32, 3, 2, 2, 2, 30, 28, 3, 2, 2, 2, 30, 31, 3, 2, 2, 2, 31,
-	34, 3, 2, 2, 2, 32, 30, 3, 2, 2, 2, 33, 25, 3, 2, 2, 2, 33, 34, 3, 2, 2,
-	2, 34, 35, 3, 2, 2, 2, 35, 36, 7, 6, 2, 2, 36, 5, 3, 2, 2, 2, 37, 40, 5,
-	8, 5, 2, 38, 40, 5, 10, 6, 2, 39, 37, 3, 2, 2, 2, 39, 38, 3, 2, 2, 2, 40,
-	7, 3, 2, 2, 2, 41, 42, 9, 2, 2, 2, 42, 9, 3, 2, 2, 2, 43, 48, 7, 27, 2,
-	2, 44, 45, 7, 7, 2, 2, 45, 47, 7, 27, 2, 2, 46, 44, 3, 2, 2, 2, 47, 50,
-	3, 2, 2, 2, 48, 46, 3, 2, 2, 2, 48, 49, 3, 2, 2, 2, 49, 11, 3, 2, 2, 2,
-	50, 48, 3, 2, 2, 2, 51, 52, 5, 6, 4, 2, 52, 13, 3, 2, 2, 2, 53, 54, 7,
-	7, 2, 2, 54, 55, 7, 27, 2, 2, 55, 15, 3, 2, 2, 2, 56, 57, 8, 9, 1, 2, 57,
-	58, 7, 4, 2, 2, 58, 59, 5, 16, 9, 2, 59, 60, 7, 6, 2, 2, 60, 63, 3, 2,
-	2, 2, 61, 63, 5, 18, 10, 2, 62, 56, 3, 2, 2, 2, 62, 61, 3, 2, 2, 2, 63,
-	87, 3, 2, 2, 2, 64, 65, 12, 10, 2, 2, 65, 66, 9, 3, 2, 2, 66, 86, 5, 16,
-	9, 11, 67, 68, 12, 9, 2, 2, 68, 69, 9, 4, 2, 2, 69, 86, 5, 16, 9, 10, 70,
-	71, 12, 8, 2, 2, 71, 72, 9, 5, 2, 2, 72, 86, 5, 16, 9, 9, 73, 74, 12, 7,
-	2, 2, 74, 75, 9, 6, 2, 2, 75, 86, 5, 16, 9, 8, 76, 77, 12, 6, 2, 2, 77,
-	78, 9, 7, 2, 2, 78, 86, 5, 16, 9, 7, 79, 80, 12, 5, 2, 2, 80, 81, 7, 21,
-	2, 2, 81, 86, 5, 16, 9, 6, 82, 83, 12, 4, 2, 2, 83, 84, 7, 22, 2, 2, 84,
-	86, 5, 16, 9, 5, 85, 64, 3, 2, 2, 2, 85, 67, 3, 2, 2, 2, 85, 70, 3, 2,
-	2, 2, 85, 73, 3, 2, 2, 2, 85, 76, 3, 2, 2, 2, 85, 79, 3, 2, 2, 2, 85, 82,
-	3, 2, 2, 2, 86, 89, 3, 2, 2, 2, 87, 85, 3, 2, 2, 2, 87, 88, 3, 2, 2, 2,
-	88, 17, 3, 2, 2, 2, 89, 87, 3, 2, 2, 2, 90, 94, 5, 12, 7, 2, 91, 92, 9,
-	8, 2, 2, 92, 94, 5, 18, 10, 2, 93, 90, 3, 2, 2, 2, 93, 91, 3, 2, 2, 2,
-	94, 19, 3, 2, 2, 2, 10, 30, 33, 39, 48, 62, 85, 87, 93,
+	7, 9, 80, 10, 9, 12, 9, 14, 9, 83, 11, 9, 3, 10, 3, 10, 3, 10, 5, 10, 88,
+	10, 10, 3, 10, 2, 3, 16, 11, 2, 4, 6, 8, 10, 12, 14, 16, 18, 2, 7, 4, 2,
+	31, 35, 38, 38, 3, 2, 8, 14, 3, 2, 15, 18, 3, 2, 19, 24, 7, 2, 8, 8, 13,
+	13, 15, 16, 18, 18, 27, 28, 2, 91, 2, 20, 3, 2, 2, 2, 4, 24, 3, 2, 2, 2,
+	6, 39, 3, 2, 2, 2, 8, 41, 3, 2, 2, 2, 10, 43, 3, 2, 2, 2, 12, 51, 3, 2,
+	2, 2, 14, 53, 3, 2, 2, 2, 16, 62, 3, 2, 2, 2, 18, 87, 3, 2, 2, 2, 20, 21,
+	5, 4, 3, 2, 21, 22, 7, 3, 2, 2, 22, 23, 5, 16, 9, 2, 23, 3, 3, 2, 2, 2,
+	24, 33, 7, 4, 2, 2, 25, 30, 7, 29, 2, 2, 26, 27, 7, 5, 2, 2, 27, 29, 7,
+	29, 2, 2, 28, 26, 3, 2, 2, 2, 29, 32, 3, 2, 2, 2, 30, 28, 3, 2, 2, 2, 30,
+	31, 3, 2, 2, 2, 31, 34, 3, 2, 2, 2, 32, 30, 3, 2, 2, 2, 33, 25, 3, 2, 2,
+	2, 33, 34, 3, 2, 2, 2, 34, 35, 3, 2, 2, 2, 35, 36, 7, 6, 2, 2, 36, 5, 3,
+	2, 2, 2, 37, 40, 5, 8, 5, 2, 38, 40, 5, 10, 6, 2, 39, 37, 3, 2, 2, 2, 39,
+	38, 3, 2, 2, 2, 40, 7, 3, 2, 2, 2, 41, 42, 9, 2, 2, 2, 42, 9, 3, 2, 2,
+	2, 43, 48, 7, 29, 2, 2, 44, 45, 7, 7, 2, 2, 45, 47, 7, 29, 2, 2, 46, 44,
+	3, 2, 2, 2, 47, 50, 3, 2, 2, 2, 48, 46, 3, 2, 2, 2, 48, 49, 3, 2, 2, 2,
+	49, 11, 3, 2, 2, 2, 50, 48, 3, 2, 2, 2, 51, 52, 5, 6, 4, 2, 52, 13, 3,
+	2, 2, 2, 53, 54, 7, 7, 2, 2, 54, 55, 7, 29, 2, 2, 55, 15, 3, 2, 2, 2, 56,
+	57, 8, 9, 1, 2, 57, 58, 7, 4, 2, 2, 58, 59, 5, 16, 9, 2, 59, 60, 7, 6,
+	2, 2, 60, 63, 3, 2, 2, 2, 61, 63, 5, 18, 10, 2, 62, 56, 3, 2, 2, 2, 62,
+	61, 3, 2, 2, 2, 63, 81, 3, 2, 2, 2, 64, 65, 12, 8, 2, 2, 65, 66, 9, 3,
+	2, 2, 66, 80, 5, 16, 9, 9, 67, 68, 12, 7, 2, 2, 68, 69, 9, 4, 2, 2, 69,
+	80, 5, 16, 9, 8, 70, 71, 12, 6, 2, 2, 71, 72, 9, 5, 2, 2, 72, 80, 5, 16,
+	9, 7, 73, 74, 12, 5, 2, 2, 74, 75, 7, 25, 2, 2, 75, 80, 5, 16, 9, 6, 76,
+	77, 12, 4, 2, 2, 77, 78, 7, 26, 2, 2, 78, 80, 5, 16, 9, 5, 79, 64, 3, 2,
+	2, 2, 79, 67, 3, 2, 2, 2, 79, 70, 3, 2, 2, 2, 79, 73, 3, 2, 2, 2, 79, 76,
+	3, 2, 2, 2, 80, 83, 3, 2, 2, 2, 81, 79, 3, 2, 2, 2, 81, 82, 3, 2, 2, 2,
+	82, 17, 3, 2, 2, 2, 83, 81, 3, 2, 2, 2, 84, 88, 5, 12, 7, 2, 85, 86, 9,
+	6, 2, 2, 86, 88, 5, 18, 10, 2, 87, 84, 3, 2, 2, 2, 87, 85, 3, 2, 2, 2,
+	88, 19, 3, 2, 2, 2, 10, 30, 33, 39, 48, 62, 79, 81, 87,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 
 var literalNames = []string{
-	"", "'=>'", "'('", "','", "')'", "'.'", "'*'", "'/'", "'%'", "'+'", "'-'",
-	"'>>'", "'<<'", "'<'", "'<='", "'>'", "'>='", "'=='", "'!='", "'&&'", "'||'",
-	"'!'", "'^'", "'&'", "'<-'",
+	"", "'=>'", "'('", "','", "')'", "'.'", "'*'", "'/'", "'%'", "'<<'", "'>>'",
+	"'&'", "'&^'", "'+'", "'-'", "'|'", "'^'", "'=='", "'!='", "'<'", "'<='",
+	"'>'", "'>='", "'&&'", "'||'", "'!'", "'<-'",
 }
 var symbolicNames = []string{
 	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-	"", "", "", "", "", "", "", "IDENTIFIER", "BINARY_OP", "INT_LIT", "BOOL_LIT",
-	"FLOAT_LIT", "IMAGINARY_LIT", "RUNE_LIT", "LITTLE_U_VALUE", "BIG_U_VALUE",
-	"STRING_LIT", "WS",
+	"", "", "", "", "", "", "", "", "", "IDENTIFIER", "BINARY_OP", "INT_LIT",
+	"BOOL_LIT", "FLOAT_LIT", "IMAGINARY_LIT", "RUNE_LIT", "LITTLE_U_VALUE",
+	"BIG_U_VALUE", "STRING_LIT", "WS",
 }
 
 var ruleNames = []string{
@@ -128,17 +125,19 @@ const (
 	LambdaParserT__21          = 22
 	LambdaParserT__22          = 23
 	LambdaParserT__23          = 24
-	LambdaParserIDENTIFIER     = 25
-	LambdaParserBINARY_OP      = 26
-	LambdaParserINT_LIT        = 27
-	LambdaParserBOOL_LIT       = 28
-	LambdaParserFLOAT_LIT      = 29
-	LambdaParserIMAGINARY_LIT  = 30
-	LambdaParserRUNE_LIT       = 31
-	LambdaParserLITTLE_U_VALUE = 32
-	LambdaParserBIG_U_VALUE    = 33
-	LambdaParserSTRING_LIT     = 34
-	LambdaParserWS             = 35
+	LambdaParserT__24          = 25
+	LambdaParserT__25          = 26
+	LambdaParserIDENTIFIER     = 27
+	LambdaParserBINARY_OP      = 28
+	LambdaParserINT_LIT        = 29
+	LambdaParserBOOL_LIT       = 30
+	LambdaParserFLOAT_LIT      = 31
+	LambdaParserIMAGINARY_LIT  = 32
+	LambdaParserRUNE_LIT       = 33
+	LambdaParserLITTLE_U_VALUE = 34
+	LambdaParserBIG_U_VALUE    = 35
+	LambdaParserSTRING_LIT     = 36
+	LambdaParserWS             = 37
 )
 
 // LambdaParser rules.
@@ -628,7 +627,7 @@ func (p *LambdaParser) BasicLit() (localctx IBasicLitContext) {
 	p.SetState(39)
 	_la = p.GetTokenStream().LA(1)
 
-	if !(((_la-27)&-(0x1f+1)) == 0 && ((1<<uint((_la-27)))&((1<<(LambdaParserINT_LIT-27))|(1<<(LambdaParserBOOL_LIT-27))|(1<<(LambdaParserFLOAT_LIT-27))|(1<<(LambdaParserIMAGINARY_LIT-27))|(1<<(LambdaParserRUNE_LIT-27))|(1<<(LambdaParserSTRING_LIT-27)))) != 0) {
+	if !(((_la-29)&-(0x1f+1)) == 0 && ((1<<uint((_la-29)))&((1<<(LambdaParserINT_LIT-29))|(1<<(LambdaParserBOOL_LIT-29))|(1<<(LambdaParserFLOAT_LIT-29))|(1<<(LambdaParserIMAGINARY_LIT-29))|(1<<(LambdaParserRUNE_LIT-29))|(1<<(LambdaParserSTRING_LIT-29)))) != 0) {
 		p.GetErrorHandler().RecoverInline(p)
 	} else {
 		p.GetErrorHandler().ReportMatch(p)
@@ -997,6 +996,64 @@ func (s *ExpressionContext) ToStringTree(ruleNames []string, recog antlr.Recogni
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
+type FirstExprContext struct {
+	*ExpressionContext
+	op antlr.Token
+}
+
+func NewFirstExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *FirstExprContext {
+	var p = new(FirstExprContext)
+
+	p.ExpressionContext = NewEmptyExpressionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*ExpressionContext))
+
+	return p
+}
+
+func (s *FirstExprContext) GetOp() antlr.Token { return s.op }
+
+func (s *FirstExprContext) SetOp(v antlr.Token) { s.op = v }
+
+func (s *FirstExprContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *FirstExprContext) AllExpression() []IExpressionContext {
+	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IExpressionContext)(nil)).Elem())
+	var tst = make([]IExpressionContext, len(ts))
+
+	for i, t := range ts {
+		if t != nil {
+			tst[i] = t.(IExpressionContext)
+		}
+	}
+
+	return tst
+}
+
+func (s *FirstExprContext) Expression(i int) IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), i)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *FirstExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(LambdaListener); ok {
+		listenerT.EnterFirstExpr(s)
+	}
+}
+
+func (s *FirstExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(LambdaListener); ok {
+		listenerT.ExitFirstExpr(s)
+	}
+}
+
 type ValueExprContext struct {
 	*ExpressionContext
 }
@@ -1034,6 +1091,64 @@ func (s *ValueExprContext) EnterRule(listener antlr.ParseTreeListener) {
 func (s *ValueExprContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(LambdaListener); ok {
 		listenerT.ExitValueExpr(s)
+	}
+}
+
+type SecondExprContext struct {
+	*ExpressionContext
+	op antlr.Token
+}
+
+func NewSecondExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *SecondExprContext {
+	var p = new(SecondExprContext)
+
+	p.ExpressionContext = NewEmptyExpressionContext()
+	p.parser = parser
+	p.CopyFrom(ctx.(*ExpressionContext))
+
+	return p
+}
+
+func (s *SecondExprContext) GetOp() antlr.Token { return s.op }
+
+func (s *SecondExprContext) SetOp(v antlr.Token) { s.op = v }
+
+func (s *SecondExprContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *SecondExprContext) AllExpression() []IExpressionContext {
+	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IExpressionContext)(nil)).Elem())
+	var tst = make([]IExpressionContext, len(ts))
+
+	for i, t := range ts {
+		if t != nil {
+			tst[i] = t.(IExpressionContext)
+		}
+	}
+
+	return tst
+}
+
+func (s *SecondExprContext) Expression(i int) IExpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), i)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *SecondExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(LambdaListener); ok {
+		listenerT.EnterSecondExpr(s)
+	}
+}
+
+func (s *SecondExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(LambdaListener); ok {
+		listenerT.ExitSecondExpr(s)
 	}
 }
 
@@ -1077,13 +1192,13 @@ func (s *QuoteExprContext) ExitRule(listener antlr.ParseTreeListener) {
 	}
 }
 
-type AddExprContext struct {
+type ThirdExprContext struct {
 	*ExpressionContext
 	op antlr.Token
 }
 
-func NewAddExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *AddExprContext {
-	var p = new(AddExprContext)
+func NewThirdExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *ThirdExprContext {
+	var p = new(ThirdExprContext)
 
 	p.ExpressionContext = NewEmptyExpressionContext()
 	p.parser = parser
@@ -1092,15 +1207,15 @@ func NewAddExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *AddExp
 	return p
 }
 
-func (s *AddExprContext) GetOp() antlr.Token { return s.op }
+func (s *ThirdExprContext) GetOp() antlr.Token { return s.op }
 
-func (s *AddExprContext) SetOp(v antlr.Token) { s.op = v }
+func (s *ThirdExprContext) SetOp(v antlr.Token) { s.op = v }
 
-func (s *AddExprContext) GetRuleContext() antlr.RuleContext {
+func (s *ThirdExprContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *AddExprContext) AllExpression() []IExpressionContext {
+func (s *ThirdExprContext) AllExpression() []IExpressionContext {
 	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IExpressionContext)(nil)).Elem())
 	var tst = make([]IExpressionContext, len(ts))
 
@@ -1113,7 +1228,7 @@ func (s *AddExprContext) AllExpression() []IExpressionContext {
 	return tst
 }
 
-func (s *AddExprContext) Expression(i int) IExpressionContext {
+func (s *ThirdExprContext) Expression(i int) IExpressionContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), i)
 
 	if t == nil {
@@ -1123,131 +1238,15 @@ func (s *AddExprContext) Expression(i int) IExpressionContext {
 	return t.(IExpressionContext)
 }
 
-func (s *AddExprContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *ThirdExprContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.EnterAddExpr(s)
+		listenerT.EnterThirdExpr(s)
 	}
 }
 
-func (s *AddExprContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *ThirdExprContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.ExitAddExpr(s)
-	}
-}
-
-type MulExprContext struct {
-	*ExpressionContext
-	op antlr.Token
-}
-
-func NewMulExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *MulExprContext {
-	var p = new(MulExprContext)
-
-	p.ExpressionContext = NewEmptyExpressionContext()
-	p.parser = parser
-	p.CopyFrom(ctx.(*ExpressionContext))
-
-	return p
-}
-
-func (s *MulExprContext) GetOp() antlr.Token { return s.op }
-
-func (s *MulExprContext) SetOp(v antlr.Token) { s.op = v }
-
-func (s *MulExprContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *MulExprContext) AllExpression() []IExpressionContext {
-	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IExpressionContext)(nil)).Elem())
-	var tst = make([]IExpressionContext, len(ts))
-
-	for i, t := range ts {
-		if t != nil {
-			tst[i] = t.(IExpressionContext)
-		}
-	}
-
-	return tst
-}
-
-func (s *MulExprContext) Expression(i int) IExpressionContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), i)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpressionContext)
-}
-
-func (s *MulExprContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.EnterMulExpr(s)
-	}
-}
-
-func (s *MulExprContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.ExitMulExpr(s)
-	}
-}
-
-type EqExpreContext struct {
-	*ExpressionContext
-	op antlr.Token
-}
-
-func NewEqExpreContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *EqExpreContext {
-	var p = new(EqExpreContext)
-
-	p.ExpressionContext = NewEmptyExpressionContext()
-	p.parser = parser
-	p.CopyFrom(ctx.(*ExpressionContext))
-
-	return p
-}
-
-func (s *EqExpreContext) GetOp() antlr.Token { return s.op }
-
-func (s *EqExpreContext) SetOp(v antlr.Token) { s.op = v }
-
-func (s *EqExpreContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *EqExpreContext) AllExpression() []IExpressionContext {
-	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IExpressionContext)(nil)).Elem())
-	var tst = make([]IExpressionContext, len(ts))
-
-	for i, t := range ts {
-		if t != nil {
-			tst[i] = t.(IExpressionContext)
-		}
-	}
-
-	return tst
-}
-
-func (s *EqExpreContext) Expression(i int) IExpressionContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), i)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpressionContext)
-}
-
-func (s *EqExpreContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.EnterEqExpre(s)
-	}
-}
-
-func (s *EqExpreContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.ExitEqExpre(s)
+		listenerT.ExitThirdExpr(s)
 	}
 }
 
@@ -1306,122 +1305,6 @@ func (s *OrExprContext) EnterRule(listener antlr.ParseTreeListener) {
 func (s *OrExprContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(LambdaListener); ok {
 		listenerT.ExitOrExpr(s)
-	}
-}
-
-type ShiftExprContext struct {
-	*ExpressionContext
-	op antlr.Token
-}
-
-func NewShiftExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *ShiftExprContext {
-	var p = new(ShiftExprContext)
-
-	p.ExpressionContext = NewEmptyExpressionContext()
-	p.parser = parser
-	p.CopyFrom(ctx.(*ExpressionContext))
-
-	return p
-}
-
-func (s *ShiftExprContext) GetOp() antlr.Token { return s.op }
-
-func (s *ShiftExprContext) SetOp(v antlr.Token) { s.op = v }
-
-func (s *ShiftExprContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *ShiftExprContext) AllExpression() []IExpressionContext {
-	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IExpressionContext)(nil)).Elem())
-	var tst = make([]IExpressionContext, len(ts))
-
-	for i, t := range ts {
-		if t != nil {
-			tst[i] = t.(IExpressionContext)
-		}
-	}
-
-	return tst
-}
-
-func (s *ShiftExprContext) Expression(i int) IExpressionContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), i)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpressionContext)
-}
-
-func (s *ShiftExprContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.EnterShiftExpr(s)
-	}
-}
-
-func (s *ShiftExprContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.ExitShiftExpr(s)
-	}
-}
-
-type CompareExprContext struct {
-	*ExpressionContext
-	op antlr.Token
-}
-
-func NewCompareExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *CompareExprContext {
-	var p = new(CompareExprContext)
-
-	p.ExpressionContext = NewEmptyExpressionContext()
-	p.parser = parser
-	p.CopyFrom(ctx.(*ExpressionContext))
-
-	return p
-}
-
-func (s *CompareExprContext) GetOp() antlr.Token { return s.op }
-
-func (s *CompareExprContext) SetOp(v antlr.Token) { s.op = v }
-
-func (s *CompareExprContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *CompareExprContext) AllExpression() []IExpressionContext {
-	var ts = s.GetTypedRuleContexts(reflect.TypeOf((*IExpressionContext)(nil)).Elem())
-	var tst = make([]IExpressionContext, len(ts))
-
-	for i, t := range ts {
-		if t != nil {
-			tst[i] = t.(IExpressionContext)
-		}
-	}
-
-	return tst
-}
-
-func (s *CompareExprContext) Expression(i int) IExpressionContext {
-	var t = s.GetTypedRuleContext(reflect.TypeOf((*IExpressionContext)(nil)).Elem(), i)
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpressionContext)
-}
-
-func (s *CompareExprContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.EnterCompareExpr(s)
-	}
-}
-
-func (s *CompareExprContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(LambdaListener); ok {
-		listenerT.ExitCompareExpr(s)
 	}
 }
 
@@ -1538,7 +1421,7 @@ func (p *LambdaParser) expression(_p int) (localctx IExpressionContext) {
 			p.Match(LambdaParserT__3)
 		}
 
-	case LambdaParserT__5, LambdaParserT__8, LambdaParserT__9, LambdaParserT__20, LambdaParserT__21, LambdaParserT__22, LambdaParserT__23, LambdaParserIDENTIFIER, LambdaParserINT_LIT, LambdaParserBOOL_LIT, LambdaParserFLOAT_LIT, LambdaParserIMAGINARY_LIT, LambdaParserRUNE_LIT, LambdaParserSTRING_LIT:
+	case LambdaParserT__5, LambdaParserT__10, LambdaParserT__12, LambdaParserT__13, LambdaParserT__15, LambdaParserT__24, LambdaParserT__25, LambdaParserIDENTIFIER, LambdaParserINT_LIT, LambdaParserBOOL_LIT, LambdaParserFLOAT_LIT, LambdaParserIMAGINARY_LIT, LambdaParserRUNE_LIT, LambdaParserSTRING_LIT:
 		localctx = NewValueExprContext(p, localctx)
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
@@ -1551,7 +1434,7 @@ func (p *LambdaParser) expression(_p int) (localctx IExpressionContext) {
 		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(85)
+	p.SetState(79)
 	p.GetErrorHandler().Sync(p)
 	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 6, p.GetParserRuleContext())
 
@@ -1561,198 +1444,140 @@ func (p *LambdaParser) expression(_p int) (localctx IExpressionContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(83)
+			p.SetState(77)
 			p.GetErrorHandler().Sync(p)
 			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext()) {
 			case 1:
-				localctx = NewMulExprContext(p, NewExpressionContext(p, _parentctx, _parentState))
+				localctx = NewFirstExprContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, LambdaParserRULE_expression)
 				p.SetState(62)
 
-				if !(p.Precpred(p.GetParserRuleContext(), 8)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 8)", ""))
+				if !(p.Precpred(p.GetParserRuleContext(), 6)) {
+					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 6)", ""))
 				}
 				p.SetState(63)
 
 				var _lt = p.GetTokenStream().LT(1)
 
-				localctx.(*MulExprContext).op = _lt
+				localctx.(*FirstExprContext).op = _lt
 
 				_la = p.GetTokenStream().LA(1)
 
-				if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<LambdaParserT__5)|(1<<LambdaParserT__6)|(1<<LambdaParserT__7))) != 0) {
+				if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<LambdaParserT__5)|(1<<LambdaParserT__6)|(1<<LambdaParserT__7)|(1<<LambdaParserT__8)|(1<<LambdaParserT__9)|(1<<LambdaParserT__10)|(1<<LambdaParserT__11))) != 0) {
 					var _ri = p.GetErrorHandler().RecoverInline(p)
 
-					localctx.(*MulExprContext).op = _ri
+					localctx.(*FirstExprContext).op = _ri
 				} else {
 					p.GetErrorHandler().ReportMatch(p)
 					p.Consume()
 				}
 				{
 					p.SetState(64)
-					p.expression(9)
+					p.expression(7)
 				}
 
 			case 2:
-				localctx = NewAddExprContext(p, NewExpressionContext(p, _parentctx, _parentState))
+				localctx = NewSecondExprContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, LambdaParserRULE_expression)
 				p.SetState(65)
 
-				if !(p.Precpred(p.GetParserRuleContext(), 7)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 7)", ""))
+				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
+					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 				}
 				p.SetState(66)
 
 				var _lt = p.GetTokenStream().LT(1)
 
-				localctx.(*AddExprContext).op = _lt
-
-				_la = p.GetTokenStream().LA(1)
-
-				if !(_la == LambdaParserT__8 || _la == LambdaParserT__9) {
-					var _ri = p.GetErrorHandler().RecoverInline(p)
-
-					localctx.(*AddExprContext).op = _ri
-				} else {
-					p.GetErrorHandler().ReportMatch(p)
-					p.Consume()
-				}
-				{
-					p.SetState(67)
-					p.expression(8)
-				}
-
-			case 3:
-				localctx = NewShiftExprContext(p, NewExpressionContext(p, _parentctx, _parentState))
-				p.PushNewRecursionContext(localctx, _startState, LambdaParserRULE_expression)
-				p.SetState(68)
-
-				if !(p.Precpred(p.GetParserRuleContext(), 6)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 6)", ""))
-				}
-				p.SetState(69)
-
-				var _lt = p.GetTokenStream().LT(1)
-
-				localctx.(*ShiftExprContext).op = _lt
-
-				_la = p.GetTokenStream().LA(1)
-
-				if !(_la == LambdaParserT__10 || _la == LambdaParserT__11) {
-					var _ri = p.GetErrorHandler().RecoverInline(p)
-
-					localctx.(*ShiftExprContext).op = _ri
-				} else {
-					p.GetErrorHandler().ReportMatch(p)
-					p.Consume()
-				}
-				{
-					p.SetState(70)
-					p.expression(7)
-				}
-
-			case 4:
-				localctx = NewCompareExprContext(p, NewExpressionContext(p, _parentctx, _parentState))
-				p.PushNewRecursionContext(localctx, _startState, LambdaParserRULE_expression)
-				p.SetState(71)
-
-				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
-				}
-				p.SetState(72)
-
-				var _lt = p.GetTokenStream().LT(1)
-
-				localctx.(*CompareExprContext).op = _lt
+				localctx.(*SecondExprContext).op = _lt
 
 				_la = p.GetTokenStream().LA(1)
 
 				if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<LambdaParserT__12)|(1<<LambdaParserT__13)|(1<<LambdaParserT__14)|(1<<LambdaParserT__15))) != 0) {
 					var _ri = p.GetErrorHandler().RecoverInline(p)
 
-					localctx.(*CompareExprContext).op = _ri
+					localctx.(*SecondExprContext).op = _ri
 				} else {
 					p.GetErrorHandler().ReportMatch(p)
 					p.Consume()
 				}
 				{
-					p.SetState(73)
+					p.SetState(67)
 					p.expression(6)
 				}
 
-			case 5:
-				localctx = NewEqExpreContext(p, NewExpressionContext(p, _parentctx, _parentState))
+			case 3:
+				localctx = NewThirdExprContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, LambdaParserRULE_expression)
-				p.SetState(74)
+				p.SetState(68)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 4)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
 				}
-				p.SetState(75)
+				p.SetState(69)
 
 				var _lt = p.GetTokenStream().LT(1)
 
-				localctx.(*EqExpreContext).op = _lt
+				localctx.(*ThirdExprContext).op = _lt
 
 				_la = p.GetTokenStream().LA(1)
 
-				if !(_la == LambdaParserT__16 || _la == LambdaParserT__17) {
+				if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<LambdaParserT__16)|(1<<LambdaParserT__17)|(1<<LambdaParserT__18)|(1<<LambdaParserT__19)|(1<<LambdaParserT__20)|(1<<LambdaParserT__21))) != 0) {
 					var _ri = p.GetErrorHandler().RecoverInline(p)
 
-					localctx.(*EqExpreContext).op = _ri
+					localctx.(*ThirdExprContext).op = _ri
 				} else {
 					p.GetErrorHandler().ReportMatch(p)
 					p.Consume()
 				}
 				{
-					p.SetState(76)
+					p.SetState(70)
 					p.expression(5)
 				}
 
-			case 6:
+			case 4:
 				localctx = NewAndExprContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, LambdaParserRULE_expression)
-				p.SetState(77)
+				p.SetState(71)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
 				}
 				{
-					p.SetState(78)
+					p.SetState(72)
 
-					var _m = p.Match(LambdaParserT__18)
+					var _m = p.Match(LambdaParserT__22)
 
 					localctx.(*AndExprContext).op = _m
 				}
 				{
-					p.SetState(79)
+					p.SetState(73)
 					p.expression(4)
 				}
 
-			case 7:
+			case 5:
 				localctx = NewOrExprContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, LambdaParserRULE_expression)
-				p.SetState(80)
+				p.SetState(74)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 2)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
 				}
 				{
-					p.SetState(81)
+					p.SetState(75)
 
-					var _m = p.Match(LambdaParserT__19)
+					var _m = p.Match(LambdaParserT__23)
 
 					localctx.(*OrExprContext).op = _m
 				}
 				{
-					p.SetState(82)
+					p.SetState(76)
 					p.expression(3)
 				}
 
 			}
 
 		}
-		p.SetState(87)
+		p.SetState(81)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 6, p.GetParserRuleContext())
 	}
@@ -1859,30 +1684,30 @@ func (p *LambdaParser) UnaryExpr() (localctx IUnaryExprContext) {
 		}
 	}()
 
-	p.SetState(91)
+	p.SetState(85)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case LambdaParserIDENTIFIER, LambdaParserINT_LIT, LambdaParserBOOL_LIT, LambdaParserFLOAT_LIT, LambdaParserIMAGINARY_LIT, LambdaParserRUNE_LIT, LambdaParserSTRING_LIT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(88)
+			p.SetState(82)
 			p.PrimaryExpr()
 		}
 
-	case LambdaParserT__5, LambdaParserT__8, LambdaParserT__9, LambdaParserT__20, LambdaParserT__21, LambdaParserT__22, LambdaParserT__23:
+	case LambdaParserT__5, LambdaParserT__10, LambdaParserT__12, LambdaParserT__13, LambdaParserT__15, LambdaParserT__24, LambdaParserT__25:
 		p.EnterOuterAlt(localctx, 2)
-		p.SetState(89)
+		p.SetState(83)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<LambdaParserT__5)|(1<<LambdaParserT__8)|(1<<LambdaParserT__9)|(1<<LambdaParserT__20)|(1<<LambdaParserT__21)|(1<<LambdaParserT__22)|(1<<LambdaParserT__23))) != 0) {
+		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<LambdaParserT__5)|(1<<LambdaParserT__10)|(1<<LambdaParserT__12)|(1<<LambdaParserT__13)|(1<<LambdaParserT__15)|(1<<LambdaParserT__24)|(1<<LambdaParserT__25))) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
 			p.Consume()
 		}
 		{
-			p.SetState(90)
+			p.SetState(84)
 			p.UnaryExpr()
 		}
 
@@ -1910,24 +1735,18 @@ func (p *LambdaParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex 
 func (p *LambdaParser) Expression_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 0:
-		return p.Precpred(p.GetParserRuleContext(), 8)
-
-	case 1:
-		return p.Precpred(p.GetParserRuleContext(), 7)
-
-	case 2:
 		return p.Precpred(p.GetParserRuleContext(), 6)
 
-	case 3:
+	case 1:
 		return p.Precpred(p.GetParserRuleContext(), 5)
 
-	case 4:
+	case 2:
 		return p.Precpred(p.GetParserRuleContext(), 4)
 
-	case 5:
+	case 3:
 		return p.Precpred(p.GetParserRuleContext(), 3)
 
-	case 6:
+	case 4:
 		return p.Precpred(p.GetParserRuleContext(), 2)
 
 	default:

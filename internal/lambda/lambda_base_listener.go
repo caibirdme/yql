@@ -62,11 +62,23 @@ func (s *BaseLambdaListener) EnterSelector(ctx *SelectorContext) {}
 // ExitSelector is called when production selector is exited.
 func (s *BaseLambdaListener) ExitSelector(ctx *SelectorContext) {}
 
+// EnterFirstExpr is called when production firstExpr is entered.
+func (s *BaseLambdaListener) EnterFirstExpr(ctx *FirstExprContext) {}
+
+// ExitFirstExpr is called when production firstExpr is exited.
+func (s *BaseLambdaListener) ExitFirstExpr(ctx *FirstExprContext) {}
+
 // EnterValueExpr is called when production valueExpr is entered.
 func (s *BaseLambdaListener) EnterValueExpr(ctx *ValueExprContext) {}
 
 // ExitValueExpr is called when production valueExpr is exited.
 func (s *BaseLambdaListener) ExitValueExpr(ctx *ValueExprContext) {}
+
+// EnterSecondExpr is called when production secondExpr is entered.
+func (s *BaseLambdaListener) EnterSecondExpr(ctx *SecondExprContext) {}
+
+// ExitSecondExpr is called when production secondExpr is exited.
+func (s *BaseLambdaListener) ExitSecondExpr(ctx *SecondExprContext) {}
 
 // EnterQuoteExpr is called when production quoteExpr is entered.
 func (s *BaseLambdaListener) EnterQuoteExpr(ctx *QuoteExprContext) {}
@@ -74,41 +86,17 @@ func (s *BaseLambdaListener) EnterQuoteExpr(ctx *QuoteExprContext) {}
 // ExitQuoteExpr is called when production quoteExpr is exited.
 func (s *BaseLambdaListener) ExitQuoteExpr(ctx *QuoteExprContext) {}
 
-// EnterAddExpr is called when production addExpr is entered.
-func (s *BaseLambdaListener) EnterAddExpr(ctx *AddExprContext) {}
+// EnterThirdExpr is called when production thirdExpr is entered.
+func (s *BaseLambdaListener) EnterThirdExpr(ctx *ThirdExprContext) {}
 
-// ExitAddExpr is called when production addExpr is exited.
-func (s *BaseLambdaListener) ExitAddExpr(ctx *AddExprContext) {}
-
-// EnterMulExpr is called when production mulExpr is entered.
-func (s *BaseLambdaListener) EnterMulExpr(ctx *MulExprContext) {}
-
-// ExitMulExpr is called when production mulExpr is exited.
-func (s *BaseLambdaListener) ExitMulExpr(ctx *MulExprContext) {}
-
-// EnterEqExpre is called when production eqExpre is entered.
-func (s *BaseLambdaListener) EnterEqExpre(ctx *EqExpreContext) {}
-
-// ExitEqExpre is called when production eqExpre is exited.
-func (s *BaseLambdaListener) ExitEqExpre(ctx *EqExpreContext) {}
+// ExitThirdExpr is called when production thirdExpr is exited.
+func (s *BaseLambdaListener) ExitThirdExpr(ctx *ThirdExprContext) {}
 
 // EnterOrExpr is called when production orExpr is entered.
 func (s *BaseLambdaListener) EnterOrExpr(ctx *OrExprContext) {}
 
 // ExitOrExpr is called when production orExpr is exited.
 func (s *BaseLambdaListener) ExitOrExpr(ctx *OrExprContext) {}
-
-// EnterShiftExpr is called when production shiftExpr is entered.
-func (s *BaseLambdaListener) EnterShiftExpr(ctx *ShiftExprContext) {}
-
-// ExitShiftExpr is called when production shiftExpr is exited.
-func (s *BaseLambdaListener) ExitShiftExpr(ctx *ShiftExprContext) {}
-
-// EnterCompareExpr is called when production compareExpr is entered.
-func (s *BaseLambdaListener) EnterCompareExpr(ctx *CompareExprContext) {}
-
-// ExitCompareExpr is called when production compareExpr is exited.
-func (s *BaseLambdaListener) ExitCompareExpr(ctx *CompareExprContext) {}
 
 // EnterAndExpr is called when production andExpr is entered.
 func (s *BaseLambdaListener) EnterAndExpr(ctx *AndExprContext) {}

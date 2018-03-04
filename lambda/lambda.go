@@ -41,6 +41,7 @@ func Filter(funcStmt string) *MState {
 	if nil != err {
 		return newErrMState(err)
 	}
+	fmt.Println(vm.instructions)
 	return &MState{
 		vm: vm,
 		cb: filterRunner,
@@ -225,68 +226,56 @@ func (l *typeCheckListener) ExitAndExpr(ctx *grammar.AndExprContext) {
 	l.stack = l.stack[:top]
 }
 
-func (l *typeCheckListener) ExitShiftExpr(ctx *grammar.ShiftExprContext) {
+func (l *typeCheckListener) ExitFisrtExpr(ctx *grammar.FirstExprContext) {
 	top := len(l.stack) - 1
 	t := l.stack[top] & l.stack[top-1]
 	if t == 0 {
 		l.halt = true
 		panic(l.halt)
 	}
-	t &= (1<<reflect.Int | 1<<reflect.Int64)
+	var availableType uint
+	availableType = 1 << reflect.Int
+	op := ctx.GetOp().GetText()
+	switch op {
+	case "*", "/":
+		availableType |= 1 << reflect.Float64
+	}
+	t &= availableType
 	if t == 0 {
 		l.halt = true
-		panic(l.halt)
+		panic(true)
 	}
 	l.stack[top-1] = t
 	l.stack = l.stack[:top]
 }
 
-func (l *typeCheckListener) ExitEqExpre(ctx *grammar.EqExpreContext) {
+func (l *typeCheckListener) ExitSecondExpr(ctx *grammar.SecondExprContext) {
 	top := len(l.stack) - 1
 	t := l.stack[top] & l.stack[top-1]
 	if t == 0 {
 		l.halt = true
 		panic(l.halt)
 	}
-	l.stack[top-1] = 1 << reflect.Bool
-	l.stack = l.stack[:top]
-}
-
-func (l *typeCheckListener) ExitMulExpr(ctx *grammar.MulExprContext) {
-	top := len(l.stack) - 1
-	t := l.stack[top] & l.stack[top-1]
-	if t == 0 {
-		l.halt = true
-		panic(l.halt)
+	var availableType uint
+	availableType = 1 << reflect.Int
+	op := ctx.GetOp().GetText()
+	switch op {
+	case "+", "-":
+		availableType |= 1 << reflect.Float64
 	}
-	t &= (1<<reflect.Int | 1<<reflect.Int64 | 1<<reflect.Float64)
+	t &= availableType
 	if t == 0 {
 		l.halt = true
-		panic(l.halt)
+		panic(true)
 	}
 	l.stack[top-1] = t
 	l.stack = l.stack[:top]
 }
 
-func (l *typeCheckListener) ExitAddExpr(ctx *grammar.AddExprContext) {
+func (l *typeCheckListener) ExitThirdExpr(ctx *grammar.ThirdExprContext) {
 	top := len(l.stack) - 1
 	t := l.stack[top] & l.stack[top-1]
 	if t == 0 {
-		l.halt = true
-		panic(l.halt)
-	}
-	t &= (1<<reflect.Int | 1<<reflect.Int64 | 1<<reflect.Float64)
-	if t == 0 {
-		l.halt = true
-		panic(l.halt)
-	}
-	l.stack[top-1] = t
-	l.stack = l.stack[:top]
-}
-
-func (l *typeCheckListener) ExitCompareExpr(ctx *grammar.CompareExprContext) {
-	top := len(l.stack) - 1
-	if l.stack[top]&l.stack[top-1] == 0 {
 		l.halt = true
 		panic(l.halt)
 	}
@@ -298,7 +287,7 @@ func (l *typeCheckListener) ExitBasicLit(ctx *grammar.BasicLitContext) {
 	var t uint
 	switch {
 	case ctx.INT_LIT() != nil:
-		t = 1<<reflect.Int | 1<<reflect.Int64
+		t = 1<<reflect.Int | 1<<reflect.Float64
 	case ctx.FLOAT_LIT() != nil:
 		t = 1 << reflect.Float64
 	case ctx.STRING_LIT() != nil:

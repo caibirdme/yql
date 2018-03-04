@@ -23,22 +23,26 @@ const (
 	iNot // !
 
 	// binary operand
-	iAdd // +
-	iDec // -
-	iMul // *
-	iDiv // ÷
-	iMod // %
-	iSal // <<
-	iSar // >>
-	iBt  // >
-	iLt  // <
+	iAdd      // +
+	iDec      // -
+	iMul      // *
+	iDiv      // ÷
+	iMod      // %
+	iSal      // <<
+	iSar      // >>
+	iBitAnd   // &
+	iBitAndOr // &^
+	iBitXor   // ^
+	iBitOr    // |
+	iBt       // >
+	iLt       // <
 
 	iEq // ==
 
 	iOr  // ||
 	iAnd // &&
 
-	// 13 actions
+	// 19 actions
 )
 
 type byteCode struct {
@@ -92,21 +96,115 @@ func (vm *virtualMachine) exec(instruction byteCode) error {
 
 type actionHandler func(*virtualMachine) error
 
-var actionRuner = [17]actionHandler{
-	iPop: zPop,
-	iNot: zNot,
-	iAdd: zAdd,
-	iDec: zDec,
-	iMul: zMul,
-	iDiv: zDiv,
-	iMod: zMod,
-	iSal: nil,
-	iSar: nil,
-	iEq:  zEq,
-	iBt:  zBt,
-	iLt:  zLt,
-	iOr:  zOr,
-	iAnd: zAnd,
+var actionRuner = [21]actionHandler{
+	iPop:      zPop,
+	iNot:      zNot,
+	iAdd:      zAdd,
+	iDec:      zDec,
+	iMul:      zMul,
+	iDiv:      zDiv,
+	iMod:      zMod,
+	iSal:      zSal,
+	iSar:      zSar,
+	iBitAnd:   zBitAnd,
+	iBitAndOr: nil,
+	iBitXor:   zBitXor,
+	iBitOr:    zBitOr,
+	iEq:       zEq,
+	iBt:       zBt,
+	iLt:       zLt,
+	iOr:       zOr,
+	iAnd:      zAnd,
+}
+
+func zBitAnd(vm *virtualMachine) error {
+	top := len(vm.stack) - 1
+	val, ok := vm.stack[top].(int)
+	if !ok {
+		return errors.New("operand of & must be an int")
+	}
+	dst, ok := vm.stack[top-1].(int)
+	if !ok {
+		return errors.New("operand of & must be an int")
+	}
+	vm.stack[top-1] = dst & val
+	vm.stack = vm.stack[:top]
+	return nil
+}
+
+func zBitAndOr(vm *virtualMachine) error {
+	top := len(vm.stack) - 1
+	val, ok := vm.stack[top].(int)
+	if !ok {
+		return errors.New("operand of | must be an int")
+	}
+	dst, ok := vm.stack[top-1].(int)
+	if !ok {
+		return errors.New("operand of | must be an int")
+	}
+	vm.stack[top-1] = dst &^ val
+	vm.stack = vm.stack[:top]
+	return nil
+}
+
+func zBitOr(vm *virtualMachine) error {
+	top := len(vm.stack) - 1
+	val, ok := vm.stack[top].(int)
+	if !ok {
+		return errors.New("operand of | must be an int")
+	}
+	dst, ok := vm.stack[top-1].(int)
+	if !ok {
+		return errors.New("operand of | must be an int")
+	}
+	vm.stack[top-1] = dst | val
+	vm.stack = vm.stack[:top]
+	return nil
+}
+
+func zBitXor(vm *virtualMachine) error {
+	top := len(vm.stack) - 1
+	val, ok := vm.stack[top].(int)
+	if !ok {
+		return errors.New("operand of ^ must be an int")
+	}
+	dst, ok := vm.stack[top-1].(int)
+	if !ok {
+		return errors.New("operand of ^ must be an int")
+	}
+	vm.stack[top-1] = dst ^ val
+	vm.stack = vm.stack[:top]
+	return nil
+}
+
+func zSal(vm *virtualMachine) error {
+	top := len(vm.stack) - 1
+	val, ok := vm.stack[top].(int)
+	if !ok {
+		return errors.New("operand of << must be an int")
+	}
+	dst, ok := vm.stack[top-1].(int)
+	if !ok {
+		return errors.New("operand of << must be an int")
+	}
+	vm.stack[top-1] = dst << uint(val)
+	vm.stack = vm.stack[:top]
+	return nil
+}
+
+func zSar(vm *virtualMachine) error {
+	top := len(vm.stack) - 1
+	val, ok := vm.stack[top].(int)
+	if !ok {
+		return errors.New("operand of << must be an int")
+	}
+	dst, ok := vm.stack[top-1].(int)
+	if !ok {
+		return errors.New("operand of << must be an int")
+	}
+	vm.stack[top-1] = dst >> uint(val)
+	vm.stack = vm.stack[:top]
+	return nil
 }
 
 func zPush(vm *virtualMachine, operand zVal) error {
@@ -164,16 +262,25 @@ func zNot(vm *virtualMachine) error {
 
 func zAdd(vm *virtualMachine) error {
 	top := len(vm.stack) - 1
-	val := vm.stack[top]
-	switch reflect.TypeOf(val).Kind() {
-	case reflect.Int:
-		p1 := val.(int)
-		p2 := vm.stack[top-1].(int)
-		vm.stack[top-1] = p1 + p2
-	case reflect.Float64:
-		p1 := val.(float64)
-		p2 := vm.stack[top-1].(float64)
-		vm.stack[top-1] = p1 + p2
+	switch ra := vm.stack[top].(type) {
+	case int:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = ra + rb
+		case float64:
+			vm.stack[top-1] = float64(ra) + rb
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
+	case float64:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = ra + float64(rb)
+		case float64:
+			vm.stack[top-1] = ra + rb
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
 	default:
 		return errOperandOfNumericOperationIsNotIntOrFloat64
 	}
@@ -183,16 +290,25 @@ func zAdd(vm *virtualMachine) error {
 
 func zDec(vm *virtualMachine) error {
 	top := len(vm.stack) - 1
-	val := vm.stack[top]
-	switch reflect.TypeOf(val).Kind() {
-	case reflect.Int:
-		p1 := val.(int)
-		p2 := vm.stack[top-1].(int)
-		vm.stack[top-1] = p2 - p1
-	case reflect.Float64:
-		p1 := val.(float64)
-		p2 := vm.stack[top-1].(float64)
-		vm.stack[top-1] = p2 - p1
+	switch ra := vm.stack[top].(type) {
+	case int:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = rb - ra
+		case float64:
+			vm.stack[top-1] = rb - float64(ra)
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
+	case float64:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = float64(rb) - ra
+		case float64:
+			vm.stack[top-1] = rb - ra
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
 	default:
 		return errOperandOfNumericOperationIsNotIntOrFloat64
 	}
@@ -202,16 +318,25 @@ func zDec(vm *virtualMachine) error {
 
 func zMul(vm *virtualMachine) error {
 	top := len(vm.stack) - 1
-	val := vm.stack[top]
-	switch reflect.TypeOf(val).Kind() {
-	case reflect.Int:
-		p1 := val.(int)
-		p2 := vm.stack[top-1].(int)
-		vm.stack[top-1] = p1 * p2
-	case reflect.Float64:
-		p1 := val.(float64)
-		p2 := vm.stack[top-1].(float64)
-		vm.stack[top-1] = p1 * p2
+	switch ra := vm.stack[top].(type) {
+	case int:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = ra * rb
+		case float64:
+			vm.stack[top-1] = float64(ra) * rb
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
+	case float64:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = ra * float64(rb)
+		case float64:
+			vm.stack[top-1] = ra * rb
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
 	default:
 		return errOperandOfNumericOperationIsNotIntOrFloat64
 	}
@@ -221,16 +346,25 @@ func zMul(vm *virtualMachine) error {
 
 func zDiv(vm *virtualMachine) error {
 	top := len(vm.stack) - 1
-	val := vm.stack[top]
-	switch reflect.TypeOf(val).Kind() {
-	case reflect.Int:
-		p1 := val.(int)
-		p2 := vm.stack[top-1].(int)
-		vm.stack[top-1] = p2 / p1
-	case reflect.Float64:
-		p1 := val.(float64)
-		p2 := vm.stack[top-1].(float64)
-		vm.stack[top-1] = p2 / p1
+	switch ra := vm.stack[top].(type) {
+	case int:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = rb / ra
+		case float64:
+			vm.stack[top-1] = rb / float64(ra)
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
+	case float64:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = float64(rb) / ra
+		case float64:
+			vm.stack[top-1] = rb / ra
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
 	default:
 		return errOperandOfNumericOperationIsNotIntOrFloat64
 	}
@@ -247,16 +381,25 @@ func zEq(vm *virtualMachine) error {
 
 func zBt(vm *virtualMachine) error {
 	top := len(vm.stack) - 1
-	val := vm.stack[top]
-	switch reflect.TypeOf(val).Kind() {
-	case reflect.Int:
-		p1 := val.(int)
-		p2 := vm.stack[top-1].(int)
-		vm.stack[top-1] = p2 > p1
-	case reflect.Float64:
-		p1 := val.(float64)
-		p2 := vm.stack[top-1].(float64)
-		vm.stack[top-1] = p2 > p1
+	switch ra := vm.stack[top].(type) {
+	case int:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = rb > ra
+		case float64:
+			vm.stack[top-1] = rb > float64(ra)
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
+	case float64:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = float64(rb) > ra
+		case float64:
+			vm.stack[top-1] = rb > ra
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
 	default:
 		return errOperandOfNumericOperationIsNotIntOrFloat64
 	}
@@ -266,16 +409,25 @@ func zBt(vm *virtualMachine) error {
 
 func zLt(vm *virtualMachine) error {
 	top := len(vm.stack) - 1
-	val := vm.stack[top]
-	switch reflect.TypeOf(val).Kind() {
-	case reflect.Int:
-		p1 := val.(int)
-		p2 := vm.stack[top-1].(int)
-		vm.stack[top-1] = p2 < p1
-	case reflect.Float64:
-		p1 := val.(float64)
-		p2 := vm.stack[top-1].(float64)
-		vm.stack[top-1] = p2 < p1
+	switch ra := vm.stack[top].(type) {
+	case int:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = rb < ra
+		case float64:
+			vm.stack[top-1] = rb < float64(ra)
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
+	case float64:
+		switch rb := vm.stack[top-1].(type) {
+		case int:
+			vm.stack[top-1] = float64(rb) < ra
+		case float64:
+			vm.stack[top-1] = rb < ra
+		default:
+			return errOperandOfNumericOperationIsNotIntOrFloat64
+		}
 	default:
 		return errOperandOfNumericOperationIsNotIntOrFloat64
 	}
@@ -366,63 +518,60 @@ func (l *byteCodeListener) ExitAndExpr(ctx *grammar.AndExprContext) {
 	})
 }
 
-func (l *byteCodeListener) ExitShiftExpr(ctx *grammar.ShiftExprContext) {
-	text := ctx.GetOp().GetText()
-	var code byteCode
-	switch text {
-	case "<<":
-		code.ins = iSal
-	case ">>":
-		code.ins = iSar
-	}
-	l.stack = append(l.stack, code)
-}
-
-func (l *byteCodeListener) ExitEqExpre(ctx *grammar.EqExpreContext) {
-	l.stack = append(l.stack, byteCode{
-		ins: iEq,
-	})
-}
-
-func (l *byteCodeListener) ExitMulExpr(ctx *grammar.MulExprContext) {
-	text := ctx.GetOp().GetText()
-	var code byteCode
-	switch text {
+func (l *byteCodeListener) ExitFirstExpr(ctx *grammar.FirstExprContext) {
+	code := byteCode{}
+	op := ctx.GetOp().GetText()
+	switch op {
 	case "*":
 		code.ins = iMul
 	case "/":
 		code.ins = iDiv
 	case "%":
 		code.ins = iMod
+	case "<<":
+		code.ins = iSal
+	case ">>":
+		code.ins = iSar
+	case "&":
+		code.ins = iBitAnd
+	case "&^":
+		code.ins = iBitAndOr
 	}
 	l.stack = append(l.stack, code)
 }
 
-func (l *byteCodeListener) ExitAddExpr(ctx *grammar.AddExprContext) {
-	text := ctx.GetOp().GetText()
-	var code byteCode
-	switch text {
+func (l *byteCodeListener) ExitSecondExpr(ctx *grammar.SecondExprContext) {
+	code := byteCode{}
+	op := ctx.GetOp().GetText()
+	switch op {
 	case "+":
 		code.ins = iAdd
 	case "-":
 		code.ins = iDec
+	case "|":
+		code.ins = iBitOr
+	case "^":
+		code.ins = iBitXor
+
 	}
 	l.stack = append(l.stack, code)
 }
 
-func (l *byteCodeListener) ExitCompareExpr(ctx *grammar.CompareExprContext) {
-	text := ctx.GetOp().GetText()
-	switch text {
-	case ">":
-		l.stack = append(l.stack, byteCode{ins: iBt})
-	case ">=":
-		l.stack = append(l.stack, byteCode{ins: iLt})
-		l.stack = append(l.stack, byteCode{ins: iNot})
+func (l *byteCodeListener) ExitThirdExpr(ctx *grammar.ThirdExprContext) {
+	op := ctx.GetOp().GetText()
+	switch op {
+	case "==":
+		l.stack = append(l.stack, byteCode{ins: iEq})
+	case "!=":
+		l.stack = append(l.stack, byteCode{ins: iEq}, byteCode{ins: iNot})
 	case "<":
 		l.stack = append(l.stack, byteCode{ins: iLt})
 	case "<=":
+		l.stack = append(l.stack, byteCode{ins: iBt}, byteCode{ins: iNot})
+	case ">":
 		l.stack = append(l.stack, byteCode{ins: iBt})
-		l.stack = append(l.stack, byteCode{ins: iNot})
+	case ">=":
+		l.stack = append(l.stack, byteCode{ins: iLt}, byteCode{ins: iNot})
 	}
 }
 

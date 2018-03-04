@@ -63,11 +63,9 @@ selector
 
 expression
     : '(' expression ')' #quoteExpr 
-    | expression op=('*' | '/' | '%') expression #mulExpr
-    | expression op=('+' | '-') expression #addExpr
-    | expression op=('>>' | '<<') expression #shiftExpr
-    | expression op=('<' | '<=' | '>' | '>=') expression #compareExpr
-    | expression op=('==' | '!=')  expression #eqExpre
+    | expression op=('*' | '/' | '%' | '<<' | '>>' | '&' | '&^') expression #firstExpr
+    | expression op=('+' | '-' | '|' | '^') expression #secondExpr
+    | expression op=('==' | '!=' | '<' | '<=' | '>' | '>=') expression #thirdExpr
     | expression op='&&' expression #andExpr
     | expression op='||' expression #orExpr
     | unaryExpr #valueExpr 
