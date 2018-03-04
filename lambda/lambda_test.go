@@ -52,6 +52,16 @@ func TestFilter_Int(t *testing.T) {
 			dst:    []int{1, 2, 3, 4, 5, 6, 7},
 			expect: []int{3},
 		},
+		{
+			expr:   `(v) =>  v > 1+2+3/(0+1)`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{7},
+		},
+		{
+			expr:   `(v) =>  v <= 1+2+3/(0+1)`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{1, 2, 3, 4, 5, 6},
+		},
 	}
 	ass := assert.New(t)
 	for _, tc := range testData {
@@ -121,5 +131,148 @@ func TestFilter_Float64(t *testing.T) {
 			t.FailNow()
 		}
 		ass.Equal(tc.expect, ans, "expr=%s", tc.expr)
+	}
+}
+
+type Student struct {
+	Age  int
+	Name string
+}
+
+func TestFilter_Struct(t *testing.T) {
+	var students = []Student{
+		Student{
+			Name: "deen",
+			Age:  24,
+		},
+		Student{
+			Name: "bob",
+			Age:  22,
+		},
+		Student{
+			Name: "alice",
+			Age:  23,
+		},
+		Student{
+			Name: "tom",
+			Age:  25,
+		},
+		Student{
+			Name: "jerry",
+			Age:  20,
+		},
+	}
+	var testData = []struct {
+		expr   string
+		expect []int
+	}{
+		{
+			expr:   `(v) => v.Age+2 > 24+1`,
+			expect: []int{0, 3},
+		},
+		{
+			expr:   `(v) => v.Age >= 23`,
+			expect: []int{0, 2, 3},
+		},
+		{
+			expr:   `(v) => v.Age < 23`,
+			expect: []int{1, 4},
+		},
+	}
+	ass := assert.New(t)
+	for _, tc := range testData {
+		mstate := Filter(tc.expr)
+		if !ass.NoError(mstate.err, "%s", tc.expr) {
+			t.FailNow()
+		}
+		result := mstate.Call(students)
+		if !ass.NotNil(result, "%s", tc.expr) {
+			t.FailNow()
+		}
+		if !ass.NoError(result.err, "%s", tc.expr) {
+			t.FailNow()
+		}
+		inf, err := result.Interface()
+		if !ass.NoError(err, "%s", tc.expr) {
+			t.FailNow()
+		}
+		ans, ok := inf.([]Student)
+		if !ass.True(ok) {
+			t.FailNow()
+		}
+		var expectArr []Student
+		for _, idx := range tc.expect {
+			expectArr = append(expectArr, students[idx])
+		}
+		ass.Equal(expectArr, ans, "expr=%s", tc.expr)
+	}
+}
+
+func TestFilter_Pointer(t *testing.T) {
+	var students = []*Student{
+		&Student{
+			Name: "deen",
+			Age:  24,
+		},
+		&Student{
+			Name: "bob",
+			Age:  22,
+		},
+		&Student{
+			Name: "alice",
+			Age:  23,
+		},
+		&Student{
+			Name: "tom",
+			Age:  25,
+		},
+		&Student{
+			Name: "jerry",
+			Age:  20,
+		},
+	}
+	var testData = []struct {
+		expr   string
+		expect []int
+	}{
+		{
+			expr:   `(v) => v.Age+2 > 24+1`,
+			expect: []int{0, 3},
+		},
+		{
+			expr:   `(v) => v.Age >= 23`,
+			expect: []int{0, 2, 3},
+		},
+		{
+			expr:   `(v) => v.Age < 23`,
+			expect: []int{1, 4},
+		},
+	}
+	ass := assert.New(t)
+	for _, tc := range testData {
+		mstate := Filter(tc.expr)
+		if !ass.NoError(mstate.err, "%s", tc.expr) {
+			t.FailNow()
+		}
+		result := mstate.Call(students)
+		if !ass.NotNil(result, "%s", tc.expr) {
+			t.FailNow()
+		}
+		if !ass.NoError(result.err, "%s", tc.expr) {
+			t.FailNow()
+		}
+		inf, err := result.Interface()
+		if !ass.NoError(err, "%s", tc.expr) {
+			t.FailNow()
+		}
+		ans, ok := inf.([]*Student)
+		if !ass.True(ok) {
+			t.FailNow()
+		}
+		var expectArr []*Student
+		for _, idx := range tc.expect {
+			expectArr = append(expectArr, students[idx])
+		}
+		ass.Equal(expectArr, ans, "expr=%s", tc.expr)
 	}
 }

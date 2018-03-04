@@ -223,11 +223,14 @@ func variablePush(vm *virtualMachine, varName string) error {
 
 func resolveVar(env map[string]interface{}, varName string) (val interface{}, ok bool) {
 	fields := strings.Split(varName, ".")
-	val, ok = env[varName]
+	val, ok = env[fields[0]]
 	if !ok {
 		return nil, false
 	}
 	nextVal := reflect.ValueOf(val)
+	for nextVal.Type().Kind() == reflect.Ptr {
+		nextVal = nextVal.Elem()
+	}
 	for _, fieldName := range fields[1:] {
 		nextVal = nextVal.FieldByName(fieldName)
 		if !nextVal.IsValid() {
@@ -235,6 +238,7 @@ func resolveVar(env map[string]interface{}, varName string) (val interface{}, ok
 			return
 		}
 	}
+	val = nextVal.Interface()
 	t, ok := val.(int64)
 	if ok {
 		return int(t), true

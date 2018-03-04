@@ -41,7 +41,6 @@ func Filter(funcStmt string) *MState {
 	if nil != err {
 		return newErrMState(err)
 	}
-	fmt.Println(vm.instructions)
 	return &MState{
 		vm: vm,
 		cb: filterRunner,
