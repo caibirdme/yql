@@ -13,6 +13,11 @@ func TestFilter_Int(t *testing.T) {
 		expect []int
 	}{
 		{
+			expr:   `(p) =>  p % 2 == 1`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{1, 3, 5, 7},
+		},
+		{
 			expr:   `(v) =>  (v&1) == 1`,
 			dst:    []int{1, 2, 3, 4, 5, 6, 7},
 			expect: []int{1, 3, 5, 7},
@@ -177,6 +182,10 @@ func TestFilter_Struct(t *testing.T) {
 		{
 			expr:   `(v) => v.Age < 23`,
 			expect: []int{1, 4},
+		},
+		{
+			expr:   `(v) => v.Age < 23 || v.Name == "tom"`,
+			expect: []int{1, 3, 4},
 		},
 	}
 	ass := assert.New(t)

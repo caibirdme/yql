@@ -55,8 +55,6 @@ type zVal interface{}
 type virtualMachine struct {
 	instructions []byteCode
 	pc           int
-	overflow     bool
-	err          error
 	stack        []zVal
 	env          map[string]interface{}
 	params       []string

@@ -37,13 +37,14 @@ func Filter(funcStmt string) *MState {
 	if returnType&(1<<reflect.Bool) == 0 {
 		return newErrMState(errors.New("Error Return Type"))
 	}
-	vm, err := sdt(root)
+	codeSegment, params, err := sdt(root)
 	if nil != err {
 		return newErrMState(err)
 	}
 	return &MState{
-		vm: vm,
-		cb: filterRunner,
+		code:   codeSegment,
+		params: params,
+		cb:     filterRunner,
 	}
 }
 
@@ -98,9 +99,9 @@ var (
 )
 
 // Syntax-Directed Translation
-func sdt(root antlr.Tree) (vm *virtualMachine, err error) {
+func sdt(root antlr.Tree) (code []byteCode, params []string, err error) {
 	walker := &byteCodeListener{
-		stack: make([]byteCode, 0, 18),
+		stack: make([]byteCode, 0, 5),
 	}
 	defer func() {
 		if r := recover(); nil != r {
@@ -108,10 +109,7 @@ func sdt(root antlr.Tree) (vm *virtualMachine, err error) {
 		}
 	}()
 	antlr.ParseTreeWalkerDefault.Walk(walker, root)
-	return &virtualMachine{
-		instructions: walker.stack,
-		params:       walker.params,
-	}, nil
+	return walker.stack, walker.params, nil
 }
 
 func getTreeRoot(funcStmt string) (tree grammar.ILambdaContext, err error) {
@@ -149,16 +147,22 @@ func (r *Result) Interface() (interface{}, error) {
 // MState is a middle state
 // It records the call stack and generates responding bytecode
 type MState struct {
-	vm  *virtualMachine
-	err error
-	cb  func(*virtualMachine, ...interface{}) *Result
+	code   []byteCode
+	params []string
+	err    error
+	cb     func(*virtualMachine, ...interface{}) *Result
 }
 
+// Call creates the context and exec the function
 func (m *MState) Call(params ...interface{}) *Result {
 	if m.err != nil {
 		return &Result{data: nil, err: m.err}
 	}
-	return m.cb(m.vm, params...)
+	vm := &virtualMachine{
+		instructions: m.code,
+		params:       m.params,
+	}
+	return m.cb(vm, params...)
 }
 
 func newErrMState(err error) *MState {

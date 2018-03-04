@@ -143,3 +143,37 @@ It's not easy but interesting, isn't it? Welcome to join me, open some issues an
 `Lambda expression` now is in its very early stage, **DO NOT USE IT IN PRODUCTION**.
 
 Now only `Filter` is supported, you can take a quick preview in [test case](/lambda/lambda_test.go)
+
+```go
+type Student struct {
+	Age  int
+	Name string
+}
+
+var students = []Student{
+	Student{
+		Name: "deen",
+		Age:  24,
+	},
+	Student{
+		Name: "bob",
+		Age:  22,
+	},
+	Student{
+		Name: "alice",
+		Age:  23,
+	},
+	Student{
+		Name: "tom",
+		Age:  25,
+	},
+	Student{
+		Name: "jerry",
+		Age:  20,
+	},
+}
+
+t = yql.Filter(`(v) => v.Age > 23 || v.Name == "alice"`).Call(students).Interface()
+res,_ := t.([]Student)
+// res: Student{"deen",24} Student{"alice", 23} Student{"tom", 25}
+```
