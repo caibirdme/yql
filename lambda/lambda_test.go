@@ -3,7 +3,7 @@ package lambda
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	assert "github.com/stretchr/testify/require"
 )
 
 func TestFilter_Int(t *testing.T) {
@@ -71,21 +71,12 @@ func TestFilter_Int(t *testing.T) {
 	ass := assert.New(t)
 	for _, tc := range testData {
 		mstate := Filter(tc.expr)
-		if !ass.NoError(mstate.err, "%s", tc.expr) {
-			t.FailNow()
-		}
-		result := mstate.Call(tc.dst)
-		if !ass.NoError(result.err, "%s", tc.expr) {
-			t.FailNow()
-		}
-		inf, err := result.Interface()
-		if !ass.NoError(err, "%s", tc.expr) {
-			t.FailNow()
-		}
+		ass.NoError(mstate.err, "%s", tc.expr)
+		r := mstate.Call(tc.dst)
+		inf, err := r.Interface()
+		ass.NoError(err, "%s", tc.expr)
 		ans, ok := inf.([]int)
-		if !ass.True(ok) {
-			t.FailNow()
-		}
+		ass.True(ok)
 		ass.Equal(tc.expect, ans, "expr=%s", tc.expr)
 	}
 }
@@ -120,21 +111,12 @@ func TestFilter_Float64(t *testing.T) {
 	ass := assert.New(t)
 	for _, tc := range testData {
 		mstate := Filter(tc.expr)
-		if !ass.NoError(mstate.err, "%s", tc.expr) {
-			t.FailNow()
-		}
-		result := mstate.Call(tc.dst)
-		if !ass.NoError(result.err, "%s", tc.expr) {
-			t.FailNow()
-		}
-		inf, err := result.Interface()
-		if !ass.NoError(err, "%s", tc.expr) {
-			t.FailNow()
-		}
+		ass.NoError(mstate.err, "%s", tc.expr)
+		r := mstate.Call(tc.dst)
+		inf, err := r.Interface()
+		ass.NoError(err, "%s", tc.expr)
 		ans, ok := inf.([]float64)
-		if !ass.True(ok) {
-			t.FailNow()
-		}
+		ass.True(ok)
 		ass.Equal(tc.expect, ans, "expr=%s", tc.expr)
 	}
 }
@@ -191,24 +173,12 @@ func TestFilter_Struct(t *testing.T) {
 	ass := assert.New(t)
 	for _, tc := range testData {
 		mstate := Filter(tc.expr)
-		if !ass.NoError(mstate.err, "%s", tc.expr) {
-			t.FailNow()
-		}
-		result := mstate.Call(students)
-		if !ass.NotNil(result, "%s", tc.expr) {
-			t.FailNow()
-		}
-		if !ass.NoError(result.err, "%s", tc.expr) {
-			t.FailNow()
-		}
-		inf, err := result.Interface()
-		if !ass.NoError(err, "%s", tc.expr) {
-			t.FailNow()
-		}
+		ass.NoError(mstate.err, "%s", tc.expr)
+		r := mstate.Call(students)
+		inf, err := r.Interface()
+		ass.NoError(err, "%s", tc.expr)
 		ans, ok := inf.([]Student)
-		if !ass.True(ok) {
-			t.FailNow()
-		}
+		ass.True(ok)
 		var expectArr []Student
 		for _, idx := range tc.expect {
 			expectArr = append(expectArr, students[idx])
@@ -260,28 +230,105 @@ func TestFilter_Pointer(t *testing.T) {
 	ass := assert.New(t)
 	for _, tc := range testData {
 		mstate := Filter(tc.expr)
-		if !ass.NoError(mstate.err, "%s", tc.expr) {
-			t.FailNow()
-		}
-		result := mstate.Call(students)
-		if !ass.NotNil(result, "%s", tc.expr) {
-			t.FailNow()
-		}
-		if !ass.NoError(result.err, "%s", tc.expr) {
-			t.FailNow()
-		}
-		inf, err := result.Interface()
-		if !ass.NoError(err, "%s", tc.expr) {
-			t.FailNow()
-		}
+		ass.NoError(mstate.err, "%s", tc.expr)
+		r := mstate.Call(students)
+		inf, err := r.Interface()
+		ass.NoError(err, "%s", tc.expr)
 		ans, ok := inf.([]*Student)
-		if !ass.True(ok) {
-			t.FailNow()
-		}
+		ass.True(ok)
 		var expectArr []*Student
 		for _, idx := range tc.expect {
 			expectArr = append(expectArr, students[idx])
 		}
 		ass.Equal(expectArr, ans, "expr=%s", tc.expr)
 	}
+}
+
+func TestMap_Int(t *testing.T) {
+	var testData = []struct {
+		expr   string
+		dst    []int
+		expect []int
+	}{
+		{
+			expr:   `(p) =>  p +1`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{2, 3, 4, 5, 6, 7, 8},
+		},
+		{
+			expr:   `(v) =>  v & 1`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{1, 0, 1, 0, 1, 0, 1},
+		},
+		{
+			expr:   `(v) =>  v | 1`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{1, 3, 3, 5, 5, 7, 7},
+		},
+		{
+			expr:   `(v) =>  (v - 1)*3`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{0, 3, 6, 9, 12, 15, 18},
+		},
+	}
+	ass := assert.New(t)
+	for _, tc := range testData {
+		mstate := Map(tc.expr)
+		ass.NoError(mstate.err, "%s", tc.expr)
+		r := mstate.Call(tc.dst)
+		inf, err := r.Interface()
+		ass.NoError(err, "%s", tc.expr)
+		ans, ok := inf.([]int)
+		ass.True(ok)
+		ass.Equal(tc.expect, ans, "expr=%s", tc.expr)
+	}
+}
+
+func TestChainable(t *testing.T) {
+	var testData = []struct {
+		m      string
+		f      string
+		dst    []int
+		expect []int
+	}{
+		{
+			m:      `(p) =>  p +1`,
+			f:      `(v) => v&1==1`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{2, 4, 6, 8},
+		},
+		{
+			m:      `(v) =>  v << 2`,
+			f:      `(v) => v > 3 && v <= 7`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{16, 20, 24, 28},
+		},
+		{
+			m:      `(v) =>  (v - 1)*3`,
+			f:      `(v) => v<4`,
+			dst:    []int{1, 2, 3, 4, 5, 6, 7},
+			expect: []int{0, 3, 6},
+		},
+	}
+	ass := assert.New(t)
+	for _, tc := range testData {
+		mstate := Filter(tc.f).Map(tc.m)
+		ass.NoError(mstate.err, "filter:%s\r\nmap:%s\r\n", tc.f, tc.m)
+		r := mstate.Call(tc.dst)
+		inf, err := r.Interface()
+		ass.NoError(err)
+		ass.NoError(mstate.err, "filter:%s\r\nmap:%s\r\n", tc.f, tc.m)
+		ans, ok := inf.([]int)
+		ass.True(ok)
+		ass.Equal(tc.expect, ans, "filter:%s\r\nmap:%s\r\n", tc.f, tc.m)
+	}
+}
+
+func TestThreeChain(t *testing.T) {
+	dst := []int{1, 2, 3, 4, 5, 6, 7}
+	r := Filter(`(v) => v > 3 && v <= 7`).Map(`(v) =>  v << 2`).Filter(`(v) => v % 8 == 0`).Call(dst)
+	s, err := r.Interface()
+	ass := assert.New(t)
+	ass.NoError(err)
+	ass.Equal([]int{16, 24}, s)
 }

@@ -48,19 +48,19 @@ func Filter(funcStmt string) *MState {
 	}
 }
 
-func filterRunner(vm *virtualMachine, params ...interface{}) *Result {
+func filterRunner(vm *virtualMachine, params ...interface{}) Result {
 	l := len(params)
 	if 0 == l {
-		return nil
+		return errZeroParams
 	}
 	targetType := reflect.TypeOf(params[0])
 	if targetType.Kind() != reflect.Slice {
-		return nil
+		return errTargetNotSlice
 	}
 	targetData := reflect.ValueOf(params[0])
 	length := targetData.Len()
 	if 0 == length {
-		return nil
+		return errEmptySlice
 	}
 	res := reflect.MakeSlice(reflect.SliceOf(targetType.Elem()), 0, length>>1)
 	for i := 0; i < length; i++ {
@@ -73,21 +73,21 @@ func filterRunner(vm *virtualMachine, params ...interface{}) *Result {
 		vm.stack = vm.stack[:0]
 		err := vm.mainLoop()
 		if nil != err {
-			return nil
+			return &result{err: err}
 		}
 		if len(vm.stack) < 1 {
-			return &Result{data: nil, err: errRuntimeErr}
+			return &result{err: errRuntimeErr}
 		}
 		val := vm.stack[0]
 		if reflect.TypeOf(val).Kind() != reflect.Bool {
-			return &Result{data: nil, err: errResultTypeErr}
+			return &result{err: errResultTypeErr}
 		}
 		b := val.(bool)
 		if b {
 			res = reflect.Append(res, targetData.Index(i))
 		}
 	}
-	return &Result{
+	return &result{
 		data: res.Interface(),
 		err:  nil,
 	}
@@ -131,16 +131,88 @@ func getTreeRoot(funcStmt string) (tree grammar.ILambdaContext, err error) {
 // Map creates a new slice with the results of calling
 // a provided function on every element in the calling slice
 func Map(funcStmt string) *MState {
-	return nil
+	root, err := getTreeRoot(funcStmt)
+	if nil != err {
+		return newErrMState(err)
+	}
+	_, err = typeCheck(root)
+	if nil != err {
+		return newErrMState(err)
+	}
+	codeSegment, params, err := sdt(root)
+	if nil != err {
+		return newErrMState(err)
+	}
+	return &MState{
+		code:   codeSegment,
+		params: params,
+		cb:     mapRunner,
+	}
+}
+
+var (
+	errZeroParams     = &result{err: errors.New("params shouldn't be empty")}
+	errTargetNotSlice = &result{err: errors.New("the first params should be a slice")}
+	errEmptySlice     = &result{err: errors.New("slice is empty")}
+)
+
+func mapRunner(vm *virtualMachine, params ...interface{}) Result {
+	l := len(params)
+	if 0 == l {
+		return errZeroParams
+	}
+	targetType := reflect.TypeOf(params[0])
+	if targetType.Kind() != reflect.Slice {
+		return errTargetNotSlice
+	}
+	targetData := reflect.ValueOf(params[0])
+	length := targetData.Len()
+	if 0 == length {
+		return errEmptySlice
+	}
+	elementType := targetType.Elem()
+	if elementType.Kind() == reflect.Struct {
+		return nil
+	}
+	res := reflect.MakeSlice(reflect.SliceOf(elementType), 0, length)
+	for i := 0; i < length; i++ {
+		vm.env = map[string]interface{}{
+			vm.params[0]: targetData.Index(i).Interface(),
+		}
+		for j := 1; j < len(vm.params); j++ {
+			vm.env[vm.params[j]] = params[j]
+		}
+		vm.stack = vm.stack[:0]
+		err := vm.mainLoop()
+		if nil != err {
+			return &result{err: err}
+		}
+		if len(vm.stack) < 1 {
+			return &result{data: nil, err: errRuntimeErr}
+		}
+		val := vm.stack[0]
+		if reflect.TypeOf(val) != elementType {
+			return &result{data: nil, err: errResultTypeErr}
+		}
+		res = reflect.Append(res, reflect.ValueOf(val))
+	}
+	return &result{
+		data: res.Interface(),
+		err:  nil,
+	}
+}
+
+type Result interface {
+	Interface() (interface{}, error)
 }
 
 // Result store the result for a call
-type Result struct {
+type result struct {
 	data interface{}
 	err  error
 }
 
-func (r *Result) Interface() (interface{}, error) {
+func (r *result) Interface() (interface{}, error) {
 	return r.data, r.err
 }
 
@@ -150,19 +222,49 @@ type MState struct {
 	code   []byteCode
 	params []string
 	err    error
-	cb     func(*virtualMachine, ...interface{}) *Result
+	cb     func(*virtualMachine, ...interface{}) Result
+	next   *MState
+}
+
+func (m *MState) Filter(funcStmt string) *MState {
+	t := m
+	for t.next != nil {
+		t = t.next
+	}
+	t.next = Filter(funcStmt)
+	return m
+}
+
+func (m *MState) Map(funcStmt string) *MState {
+	t := m
+	for t.next != nil {
+		t = t.next
+	}
+	t.next = Map(funcStmt)
+	return m
 }
 
 // Call creates the context and exec the function
-func (m *MState) Call(params ...interface{}) *Result {
+func (m *MState) Call(params ...interface{}) Result {
 	if m.err != nil {
-		return &Result{data: nil, err: m.err}
+		return &result{data: nil, err: m.err}
 	}
-	vm := &virtualMachine{
-		instructions: m.code,
-		params:       m.params,
+	t := m
+	var r Result
+	for t != nil {
+		vm := &virtualMachine{
+			instructions: t.code,
+			params:       t.params,
+		}
+		r = t.cb(vm, params...)
+		newR, err := r.Interface()
+		if nil != err {
+			return r
+		}
+		params[0] = newR
+		t = t.next
 	}
-	return m.cb(vm, params...)
+	return r
 }
 
 func newErrMState(err error) *MState {
@@ -307,6 +409,5 @@ func (l *typeCheckListener) ExitOperandName(ctx *grammar.OperandNameContext) {
 
 var anyType uint = (1<<reflect.Bool |
 	1<<reflect.Int |
-	1<<reflect.Int64 |
 	1<<reflect.Float64 |
 	1<<reflect.String)

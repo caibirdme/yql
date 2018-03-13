@@ -142,7 +142,7 @@ It's not easy but interesting, isn't it? Welcome to join me, open some issues an
 #### Attention
 `Lambda expression` now is in its very early stage, **DO NOT USE IT IN PRODUCTION**.
 
-Now only `Filter` is supported, you can take a quick preview in [test case](/lambda/lambda_test.go)
+You can take a quick preview in [test case](/lambda/lambda_test.go)
 
 ```go
 type Student struct {
@@ -176,4 +176,14 @@ var students = []Student{
 t = yql.Filter(`(v) => v.Age > 23 || v.Name == "alice"`).Call(students).Interface()
 res,_ := t.([]Student)
 // res: Student{"deen",24} Student{"alice", 23} Student{"tom", 25}
+```
+
+Chainable
+```go
+dst := []int{1, 2, 3, 4, 5, 6, 7}
+r := Filter(`(v) => v > 3 && v <= 7`).Map(`(v) =>  v << 2`).Filter(`(v) => v % 8 == 0`).Call(dst)
+s, err := r.Interface()
+ass := assert.New(t)
+ass.NoError(err)
+ass.Equal([]int{16, 24}, s)
 ```
