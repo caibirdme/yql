@@ -227,20 +227,34 @@ type MState struct {
 }
 
 func (m *MState) Filter(funcStmt string) *MState {
+	if m.err != nil {
+		return m
+	}
 	t := m
 	for t.next != nil {
 		t = t.next
 	}
-	t.next = Filter(funcStmt)
+	newMState := Filter(funcStmt)
+	if newMState.err != nil {
+		return newMState
+	}
+	t.next = newMState
 	return m
 }
 
 func (m *MState) Map(funcStmt string) *MState {
+	if m.err != nil {
+		return m
+	}
 	t := m
 	for t.next != nil {
 		t = t.next
 	}
-	t.next = Map(funcStmt)
+	newMState := Map(funcStmt)
+	if newMState.err != nil {
+		return newMState
+	}
+	t.next = newMState
 	return m
 }
 

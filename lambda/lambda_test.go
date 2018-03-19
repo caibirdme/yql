@@ -325,10 +325,15 @@ func TestChainable(t *testing.T) {
 }
 
 func TestThreeChain(t *testing.T) {
-	dst := []int{1, 2, 3, 4, 5, 6, 7}
-	r := Filter(`(v) => v > 3 && v <= 7`).Map(`(v) =>  v << 2`).Filter(`(v) => v % 8 == 0`).Call(dst)
+	scores := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	//                                   syntax error
+	r := Filter(`(v) => v % 2 == 0`).Map(`v => v*v`).Call(scores)
 	s, err := r.Interface()
 	ass := assert.New(t)
+	ass.Error(err)
+	dst := []int{1, 2, 3, 4, 5, 6, 7}
+	r = Filter(`(v) => v > 3 && v <= 7`).Map(`(v) =>  v << 2`).Filter(`(v) => v % 8 == 0`).Call(dst)
+	s, err = r.Interface()
 	ass.NoError(err)
 	ass.Equal([]int{16, 24}, s)
 }
