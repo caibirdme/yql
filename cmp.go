@@ -25,9 +25,9 @@ const (
 
 func cmpInt(actual, expect int64, op string) bool {
 	switch op {
-	case opEqual:
+	case opEqual,opIn:
 		return actual == expect
-	case opNotEqual:
+	case opNotEqual,opNotIn:
 		return actual != expect
 	case opLarger:
 		return actual > expect
@@ -63,9 +63,9 @@ func cmpFloat(actual, expect float64, op string) bool {
 
 func cmpStr(actual, expect string, op string) bool {
 	switch op {
-	case opEqual:
+	case opEqual,opIn:
 		return actual == expect
-	case opNotEqual:
+	case opNotEqual,opNotIn:
 		return actual != expect
 	case opLarger:
 		return actual > expect

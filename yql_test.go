@@ -468,6 +468,55 @@ func TestMatch_In(t *testing.T) {
 		out    bool
 	}{
 		{
+			rawYql: `a in ('swim')`,
+			data: map[string]interface{}{
+				"a": "swim",
+			},
+			out: true,
+		},
+		{
+			rawYql: `a in ('soccer')`,
+			data: map[string]interface{}{
+				"a": "swim",
+			},
+			out: false,
+		},
+		{
+			rawYql: `a !in ('swim')`,
+			data: map[string]interface{}{
+				"a": "swim",
+			},
+			out: false,
+		},
+		{
+			rawYql: `a !in ('soccer')`,
+			data: map[string]interface{}{
+				"a": "swim",
+			},
+			out: true,
+		},
+		{
+			rawYql: `a !in (1,2,3)`,
+			data: map[string]interface{}{
+				"a": 1,
+			},
+			out: false,
+		},
+		{
+			rawYql: `a in (1,2,3)`,
+			data: map[string]interface{}{
+				"a": 3,
+			},
+			out: true,
+		},
+		{
+			rawYql: `a in (1,5,9)`,
+			data: map[string]interface{}{
+				"a": 5,
+			},
+			out: true,
+		},
+		{
 			rawYql: `a !in (1,2, 10,   5)`,
 			data: map[string]interface{}{
 				"a": int64(9),
