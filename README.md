@@ -3,7 +3,7 @@
 [![GoDoc](https://godoc.org/github.com/caibirdme/yql?status.svg)](https://godoc.org/github.com/caibirdme/yql)
 
 
-YQL is very similar with the `where` part of sql. You can see it as another sql which also support comparison between two sets. YQL have little concepts thus you can use it well short after reading the examples.Though it's designed for rule engine, it can be widely used in your code logic.
+YQL is very similar with the `where` part of sql. You can see it as another sql which also support comparison between two sets. YQL have nearly no new concepts, so you can use it well short after reading the examples.Though it's designed for rule engine, it can be widely used in your code logic.
 
 ### Install
 `go get github.com/caibirdme/yql`
