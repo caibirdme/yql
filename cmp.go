@@ -25,9 +25,9 @@ const (
 
 func cmpInt(actual, expect int64, op string) bool {
 	switch op {
-	case opEqual,opIn:
+	case opEqual, opIn:
 		return actual == expect
-	case opNotEqual,opNotIn:
+	case opNotEqual, opNotIn:
 		return actual != expect
 	case opLarger:
 		return actual > expect
@@ -63,9 +63,9 @@ func cmpFloat(actual, expect float64, op string) bool {
 
 func cmpStr(actual, expect string, op string) bool {
 	switch op {
-	case opEqual,opIn:
+	case opEqual, opIn:
 		return actual == expect
-	case opNotEqual,opNotIn:
+	case opNotEqual, opNotIn:
 		return actual != expect
 	case opLarger:
 		return actual > expect
@@ -91,10 +91,17 @@ func cmpBool(actual, expect bool, op string) bool {
 	}
 }
 
-func compareSet(actual interface{}, expect []string, op string) bool {
+func shouldCompareSet(op string) bool {
 	switch op {
 	case opEqual, opNotEqual, opInter, opNotInter, opIn, opNotIn:
+		return true
 	default:
+		return false
+	}
+}
+
+func compareSet(actual interface{}, expect []string, op string) bool {
+	if !shouldCompareSet(op) {
 		return false
 	}
 	switch actualArr := actual.(type) {

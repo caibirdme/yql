@@ -2,6 +2,7 @@ package yql
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -178,6 +179,9 @@ func Match(rawYQL string, data map[string]interface{}) (bool, error) {
 
 func compare(actualValue interface{}, expectValue []string, op string) bool {
 	if len(expectValue) > 1 {
+		return compareSet(actualValue, expectValue, op)
+	}
+	if reflect.TypeOf(actualValue).Kind() == reflect.Slice {
 		return compareSet(actualValue, expectValue, op)
 	}
 	e := removeQuote(expectValue[0])

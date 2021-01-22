@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestHandleSyntaxErr(t *testing.T) {
@@ -1149,5 +1150,48 @@ func TestRule_Match_Multi(t *testing.T) {
 		ok, err := ruler.Match(tc.data)
 		ass.NoError(err)
 		ass.Equal(tc.out, ok, "data=%+v", tc.data)
+	}
+}
+
+func Test_Compare_Slice_And_One_Element(t *testing.T) {
+	should := require.New(t)
+	var testData = []struct {
+		rawYql string
+		data   map[string]interface{}
+		out    bool
+	}{
+		{
+			rawYql: `letter ∩ ('a')`,
+			data: map[string]interface{}{
+				"letter": []string{"a", "b", "c"},
+			},
+			out: true,
+		},
+		{
+			rawYql: `letter ∩ ('a', 'b')`,
+			data: map[string]interface{}{
+				"letter": []string{"a", "b", "c"},
+			},
+			out: true,
+		},
+		{
+			rawYql: `letter ∩ ('d')`,
+			data: map[string]interface{}{
+				"letter": []string{"a", "b", "c"},
+			},
+			out: false,
+		},
+		{
+			rawYql: `letter in ('a')`,
+			data: map[string]interface{}{
+				"letter": []string{"a", "b", "c"},
+			},
+			out: false,
+		},
+	}
+	for _, tc := range testData {
+		actual, err := Match(tc.rawYql, tc.data)
+		should.NoError(err)
+		should.Equal(tc.out, actual)
 	}
 }
